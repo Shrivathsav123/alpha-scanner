@@ -2,7 +2,7 @@
 # main.py — Alpha Scanner — Your trading rules engine
 import sys, os, json
 from datetime import datetime
-from universe import ALL_US, NSE_STOCKS, SECTOR_ETFS
+from universe import ALL_US, NSE_STOCKS, SECTOR_ETFS, US_STOCKS
 from technical import analyze_ticker
 from macro import get_macro_environment, format_macro_alert
 from news import scan_news_for_ticker, get_related_etfs
@@ -115,7 +115,8 @@ def main():
     else:
         # Default: scan ETFs + top 20 US stocks
         print("[Scanner] Default scan (ETFs + top stocks)...")
-        combined = {**SECTOR_ETFS, **dict(list(ALL_US.items())[:20])}
+        # Scan top ETFs + top 10 stocks per run to avoid rate limits
+    combined = {**dict(list(SECTOR_ETFS.items())[:20]), **dict(list(US_STOCKS.items())[:10])}
         results  = run_scan(combined, market="US")
 
     # Apply macro modifier
