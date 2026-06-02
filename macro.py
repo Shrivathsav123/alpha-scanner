@@ -30,20 +30,23 @@ def get_fred_data(series_id):
     return None, None
 
 def get_vix_from_cboe():
-    """Get VIX from CBOE directly — no Yahoo needed."""
+    """Get VIX from Yahoo Finance direct API."""
     try:
-        url  = "https://cdn.cboe.com/api/global/delayed_quotes/charts/historical/_VIX.json"
-        resp = requests.get(url, timeout=8)
+        url = "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?range=5d&interval=1d"
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+        resp = requests.get(url, headers=headers, timeout=10)
         if resp.status_code == 200:
-            data = resp.json()
-            rows = data.get("data", [])
-            if len(rows) >= 2:
-                current = float(rows[-1][4])  # Close price
-                prev    = float(rows[-2][4])
-                return current, prev
+            data   = resp.json()
+            result = data.get("chart", {}).get("result", [])
+            if result:
+                closes = result[0].get("indicators", {}).get("quote", [{}])[0].get("close", [])
+                closes = [c for c in closes if c is not None]
+                if len(closes) >= 2:
+                    return float(closes[-1]), float(closes[-2])
     except:
         pass
     return None, None
+
 
 def get_macro_environment():
     """
