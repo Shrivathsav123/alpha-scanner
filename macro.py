@@ -1,4 +1,4 @@
-# macro.py — Macro environment using FRED + RSS feeds (no Yahoo Finance)
+# macro.py — Full macro data using Yahoo Finance direct HTTP
 import requests
 import feedparser
 import os
@@ -6,6 +6,41 @@ from datetime import datetime, timedelta
 
 FRED_API_KEY = os.environ.get("FRED_API_KEY", "")
 FRED_BASE    = "https://api.stlouisfed.org/fred/series/observations"
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "application/json",
+}
+
+def fetch_yahoo_quote(symbol):
+    """Fetch latest price and change for any Yahoo Finance symbol."""
+    try:
+        url  = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?range=5d&interval=1d"
+        resp = requests.get(url, headers=HEADERS, timeout=10)
+        if resp.status_code != 200:
+            return None, None, None
+
+        data   = resp.json()
+        result = data.get("chart", {}).get("result", [])
+        if not result:
+            return None, None, None
+
+        meta   = result[0].get("meta", {})
+        closes = result[0].get("indicators", {}).get("quote", [{}])[0].get("close", [])
+        closes = [c for c in closes if c is not None]
+
+        if len(closes) >= 2:
+            current = round(float(closes[-1]), 2)
+            prev    = round(float(closes[-2]), 2)
+            change  = round(((current - prev) / prev) * 100, 2)
+            return current, prev, change
+        elif len(closes) == 1:
+            current = round(float(closes[-1]), 2)
+            return current, current, 0.0
+
+    except Exception as e:
+        pass
+    return None, None, None
 
 def get_fred_data(series_id):
     """Fetch latest data from FRED API."""
@@ -29,31 +64,7 @@ def get_fred_data(series_id):
         pass
     return None, None
 
-def get_vix_from_cboe():
-    """Get VIX from Yahoo Finance direct API."""
-    try:
-        url = "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?range=5d&interval=1d"
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-        resp = requests.get(url, headers=headers, timeout=10)
-        if resp.status_code == 200:
-            data   = resp.json()
-            result = data.get("chart", {}).get("result", [])
-            if result:
-                closes = result[0].get("indicators", {}).get("quote", [{}])[0].get("close", [])
-                closes = [c for c in closes if c is not None]
-                if len(closes) >= 2:
-                    return float(closes[-1]), float(closes[-2])
-    except:
-        pass
-    return None, None
-
-
 def get_macro_environment():
-    """
-    Full macro environment scan.
-    Sources: FRED API + CBOE + Google News RSS
-    No Yahoo Finance — no rate limits!
-    """
     macro = {
         "vix":           {},
         "dxy":           {},
@@ -69,104 +80,119 @@ def get_macro_environment():
     bullish_count = 0
     bearish_count = 0
 
-    # ── VIX from CBOE ─────────────────────────────────────────
+    # ── VIX ──────────────────────────────────────────────────
     try:
-        vix_current, vix_prev = get_vix_from_cboe()
-
-        if vix_current:
-            vix_change = ((vix_current - vix_prev) / vix_prev * 100) if vix_prev else 0
+        vix, vix_prev, vix_change = fetch_yahoo_quote("%5EVIX")
+        if vix:
             macro["vix"] = {
-                "value":  round(vix_current, 2),
-                "change": round(vix_change, 1),
+                "value":  vix,
+                "change": vix_change,
             }
-
-            if vix_current < 15:
+            if vix < 15:
                 macro["vix"]["signal"] = "✅ VIX LOW — Risk ON"
                 bullish_count += 2
-                macro["summary"].append(f"VIX {vix_current:.1f} — Very low fear")
-            elif vix_current < 20:
+                macro["summary"].append(f"VIX {vix} — Very low fear, risk on")
+            elif vix < 20:
                 macro["vix"]["signal"] = "✅ VIX CALM — Mild risk on"
                 bullish_count += 1
-                macro["summary"].append(f"VIX {vix_current:.1f} — Calm")
-            elif vix_current < 30:
+                macro["summary"].append(f"VIX {vix} — Calm market")
+            elif vix < 30:
                 macro["vix"]["signal"] = "⚠️ VIX ELEVATED — Caution"
                 bearish_count += 1
-                macro["summary"].append(f"VIX {vix_current:.1f} — Elevated fear")
+                macro["summary"].append(f"VIX {vix} — Elevated fear")
             else:
                 macro["vix"]["signal"] = "🔴 VIX HIGH — Risk OFF"
                 bearish_count += 2
-                macro["alerts"].append(f"⚠️ VIX SPIKE: {vix_current:.1f}")
+                macro["alerts"].append(f"⚠️ VIX SPIKE: {vix}")
 
-            if vix_change > 15:
-                macro["alerts"].append(f"🚨 VIX SURGING +{vix_change:.1f}%")
-            elif vix_change < -10:
-                macro["alerts"].append(f"✅ VIX FALLING {vix_change:.1f}%")
+            if vix_change and vix_change > 15:
+                macro["alerts"].append(f"🚨 VIX SURGING +{vix_change}%")
+            elif vix_change and vix_change < -10:
+                macro["alerts"].append(f"✅ VIX FALLING {vix_change}%")
         else:
-            macro["vix"] = {"value": "N/A", "signal": "VIX data unavailable"}
-
+            macro["vix"] = {"value": "N/A", "signal": "Unavailable"}
     except Exception as e:
-        macro["vix"] = {"error": str(e)}
+        macro["vix"] = {"value": "N/A", "signal": str(e)}
 
-    # ── FRED: CPI Inflation ───────────────────────────────────
+    # ── DXY ──────────────────────────────────────────────────
+    try:
+        dxy, dxy_prev, dxy_change = fetch_yahoo_quote("DX-Y.NYB")
+        if dxy:
+            macro["dxy"] = {
+                "value":  dxy,
+                "change": dxy_change,
+            }
+            if dxy_change and dxy_change < -0.3:
+                macro["dxy"]["signal"] = "✅ DXY FALLING — Bullish for stocks & NSE"
+                bullish_count += 1
+                macro["summary"].append(f"DXY {dxy} falling — good for equities")
+            elif dxy_change and dxy_change > 0.3:
+                macro["dxy"]["signal"] = "⚠️ DXY RISING — Headwind for stocks"
+                bearish_count += 1
+                macro["summary"].append(f"DXY {dxy} rising — headwind")
+            else:
+                macro["dxy"]["signal"] = f"◆ DXY STABLE at {dxy}"
+        else:
+            macro["dxy"] = {"value": "N/A", "signal": "Unavailable"}
+    except Exception as e:
+        macro["dxy"] = {"value": "N/A", "signal": str(e)}
+
+    # ── 10yr Bond Yield ───────────────────────────────────────
+    try:
+        tnx, tnx_prev, tnx_change = fetch_yahoo_quote("%5ETNX")
+        if tnx:
+            # TNX is quoted as percentage * 10
+            yield_val    = round(tnx / 10, 3) if tnx > 10 else tnx
+            yield_change = round(tnx_change, 3) if tnx_change else 0
+
+            macro["bonds"] = {
+                "yield_10yr": yield_val,
+                "change":     yield_change,
+            }
+            if yield_change > 0.05:
+                macro["bonds"]["signal"] = "⚠️ YIELDS RISING — Pressure on growth/tech"
+                bearish_count += 1
+                macro["summary"].append(f"10yr yield {yield_val}% rising")
+            elif yield_change < -0.05:
+                macro["bonds"]["signal"] = "✅ YIELDS FALLING — Bullish for tech"
+                bullish_count += 1
+                macro["summary"].append(f"10yr yield {yield_val}% falling")
+            else:
+                macro["bonds"]["signal"] = f"◆ Yields stable at {yield_val}%"
+        else:
+            macro["bonds"] = {"yield_10yr": "N/A", "signal": "Unavailable"}
+    except Exception as e:
+        macro["bonds"] = {"yield_10yr": "N/A", "signal": str(e)}
+
+    # ── FRED: CPI + Fed Rate ──────────────────────────────────
     try:
         cpi, cpi_prev = get_fred_data("CPIAUCSL")
         if cpi and cpi_prev:
             cpi_change = ((cpi - cpi_prev) / cpi_prev) * 100
-            macro["fred"]["cpi"] = {
-                "value":  round(cpi, 2),
-                "change": round(cpi_change, 3),
-            }
+            macro["fred"]["cpi"] = {"value": round(cpi,2), "change": round(cpi_change,3)}
             if cpi_change > 0.3:
                 bearish_count += 1
-                macro["alerts"].append(f"🔴 CPI RISING: {cpi:.2f} (+{cpi_change:.2f}%) — Inflation up")
-                macro["summary"].append(f"CPI {cpi:.2f} rising — inflation concern")
+                macro["alerts"].append(f"🔴 CPI RISING {cpi:.2f} — Inflation up")
             elif cpi_change < -0.1:
                 bullish_count += 1
-                macro["alerts"].append(f"✅ CPI FALLING: {cpi:.2f} — Fed may cut")
-                macro["summary"].append(f"CPI {cpi:.2f} falling — bullish")
+                macro["alerts"].append(f"✅ CPI FALLING {cpi:.2f} — Fed may cut")
     except:
         pass
 
-    # ── FRED: Fed Funds Rate ──────────────────────────────────
     try:
         fed, fed_prev = get_fred_data("FEDFUNDS")
         if fed:
-            macro["fred"]["fed_rate"] = {
-                "value":  round(fed, 2),
-                "change": round(fed - (fed_prev or fed), 2),
-            }
+            macro["fred"]["fed_rate"] = {"value": round(fed,2)}
             if fed > 5.0:
                 bearish_count += 1
-                macro["summary"].append(f"Fed Rate {fed:.2f}% — High, headwind")
+                macro["summary"].append(f"Fed Rate {fed:.2f}% — High")
             elif fed < 3.0:
                 bullish_count += 1
                 macro["summary"].append(f"Fed Rate {fed:.2f}% — Low, bullish")
     except:
         pass
 
-    # ── FRED: 10yr Treasury Yield ─────────────────────────────
-    try:
-        t10, t10_prev = get_fred_data("DGS10")
-        if t10:
-            yield_change = t10 - (t10_prev or t10)
-            macro["bonds"] = {
-                "yield_10yr": round(t10, 3),
-                "change":     round(yield_change, 3),
-            }
-            if yield_change > 0.05:
-                bearish_count += 1
-                macro["bonds"]["signal"] = "⚠️ YIELDS RISING — Pressure on growth"
-                macro["summary"].append(f"10yr yield {t10:.2f}% rising")
-            elif yield_change < -0.05:
-                bullish_count += 1
-                macro["bonds"]["signal"] = "✅ YIELDS FALLING — Bullish for tech"
-                macro["summary"].append(f"10yr yield {t10:.2f}% falling")
-            else:
-                macro["bonds"]["signal"] = f"◆ Yields stable at {t10:.2f}%"
-    except:
-        pass
-
-    # ── Fed/CPI News from Google RSS ──────────────────────────
+    # ── Fed/CPI News ──────────────────────────────────────────
     try:
         url  = "https://news.google.com/rss/search?q=Federal+Reserve+CPI+inflation+interest+rate+2026&hl=en-US&gl=US&ceid=US:en"
         feed = feedparser.parse(url)
@@ -184,28 +210,28 @@ def get_macro_environment():
     # ── Overall Environment ───────────────────────────────────
     net = bullish_count - bearish_count
     if net >= 3:
-        macro["environment"]     = "RISK ON 🟢"
-        macro["score_modifier"]  = +1
+        macro["environment"]    = "RISK ON 🟢"
+        macro["score_modifier"] = +1
     elif net >= 1:
-        macro["environment"]     = "MILDLY BULLISH 🟡"
-        macro["score_modifier"]  = 0
+        macro["environment"]    = "MILDLY BULLISH 🟡"
+        macro["score_modifier"] = 0
     elif net <= -3:
-        macro["environment"]     = "RISK OFF 🔴"
-        macro["score_modifier"]  = -1
+        macro["environment"]    = "RISK OFF 🔴"
+        macro["score_modifier"] = -1
     elif net <= -1:
-        macro["environment"]     = "CAUTIOUS 🟠"
-        macro["score_modifier"]  = -1
+        macro["environment"]    = "CAUTIOUS 🟠"
+        macro["score_modifier"] = -1
     else:
-        macro["environment"]     = "NEUTRAL ⚪"
-        macro["score_modifier"]  = 0
+        macro["environment"]    = "NEUTRAL ⚪"
+        macro["score_modifier"] = 0
 
     return macro
 
 
 def format_macro_alert(macro):
-    """Format macro environment for Telegram."""
     env   = macro["environment"]
     vix   = macro.get("vix", {})
+    dxy   = macro.get("dxy", {})
     bonds = macro.get("bonds", {})
     fred  = macro.get("fred", {})
     cpi   = fred.get("cpi", {})
@@ -214,8 +240,9 @@ def format_macro_alert(macro):
     lines = [
         f"🌍 <b>MACRO: {env}</b>",
         "",
-        f"😱 VIX: {vix.get('value','?')} — {vix.get('signal','')}",
-        f"📉 10yr Yield: {bonds.get('yield_10yr','?')}% — {bonds.get('signal','')}",
+        f"😱 VIX: {vix.get('value','N/A')} ({vix.get('change',0):+.1f}%) — {vix.get('signal','')}",
+        f"💵 DXY: {dxy.get('value','N/A')} ({dxy.get('change',0):+.2f}%) — {dxy.get('signal','')}",
+        f"📉 10yr Yield: {bonds.get('yield_10yr','N/A')}% — {bonds.get('signal','')}",
     ]
 
     if cpi.get("value"):
