@@ -1,41 +1,77 @@
-# technical.py — Trading rules engine using Stooq (no rate limits)
+# technical.py — Uses direct HTTP to Yahoo Finance with browser headers
+# This bypasses rate limiting by mimicking a real browser request
 import pandas as pd
 import numpy as np
 import ta
-import time
 import requests
+import io
+import time
 from datetime import datetime, timedelta
 
-# ── Your RSI Rules ────────────────────────────────────────────
 RSI_OVERSOLD_STRONG = 35
 RSI_OVERSOLD_MAX    = 50
-RSI_OVERBOUGHT      = 70
 
-def stooq_ticker(ticker):
-    if ticker.endswith(".NS"):
-        return ticker.replace(".NS", ".IN")
-    fixes = {
-        "^VIX":    "^VIX",
-        "^TNX":    "^TNX",
-        "^GSPC":   "^SPX",
-        "^IXIC":   "^NDQ",
-        "^DJI":    "^DJI",
-        "DX-Y.NYB":"UUP",
-    }
-    return fixes.get(ticker, ticker)
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.5",
+    "Accept-Encoding": "gzip, deflate",
+    "Connection": "keep-alive",
+}
 
-def safe_download(ticker, period_days=500):
+def fetch_yahoo(ticker, period="1y", interval="1d"):
+    """
+    Fetch stock data directly from Yahoo Finance API.
+    Uses browser headers to avoid rate limiting.
+    """
     try:
-        from pandas_datareader import data as pdr
-        end   = datetime.today()
-        start = end - timedelta(days=period_days)
-        stk   = stooq_ticker(ticker)
-        df    = pdr.DataReader(stk, "stooq", start=start, end=end)
-        if df is None or df.empty:
+        time.sleep(0.5)
+        
+        # Convert period to timestamps
+        end_ts   = int(datetime.now().timestamp())
+        days_map = {"3mo": 90, "6mo": 180, "1y": 365, "2y": 730, "5y": 1825}
+        days     = days_map.get(period, 365)
+        start_ts = int((datetime.now() - timedelta(days=days)).timestamp())
+
+        url = (
+            f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
+            f"?period1={start_ts}&period2={end_ts}&interval={interval}"
+            f"&includePrePost=false&events=div%7Csplit"
+        )
+
+        session = requests.Session()
+        session.headers.update(HEADERS)
+        
+        # First get cookies
+        session.get("https://finance.yahoo.com", timeout=10)
+        
+        resp = session.get(url, timeout=15)
+        if resp.status_code != 200:
             return pd.DataFrame()
-        df = df.sort_index()
-        df.columns = [c.capitalize() for c in df.columns]
+
+        data   = resp.json()
+        result = data.get("chart", {}).get("result", [])
+        if not result:
+            return pd.DataFrame()
+
+        chart     = result[0]
+        timestamps = chart.get("timestamp", [])
+        quote     = chart.get("indicators", {}).get("quote", [{}])[0]
+
+        if not timestamps:
+            return pd.DataFrame()
+
+        df = pd.DataFrame({
+            "Open":   quote.get("open",   [None]*len(timestamps)),
+            "High":   quote.get("high",   [None]*len(timestamps)),
+            "Low":    quote.get("low",    [None]*len(timestamps)),
+            "Close":  quote.get("close",  [None]*len(timestamps)),
+            "Volume": quote.get("volume", [0]*len(timestamps)),
+        }, index=pd.to_datetime(timestamps, unit="s"))
+
+        df = df.dropna(subset=["Close"])
         return df
+
     except Exception as e:
         return pd.DataFrame()
 
@@ -56,25 +92,17 @@ def get_rsi_score(ticker):
     details        = {}
     oversold_count = 0
 
-    timeframe_checks = [
-        ("daily",  500),
-        ("weekly", 1000),
+    checks = [
+        ("daily",  "1y",  "1d"),
+        ("weekly", "2y",  "1wk"),
     ]
 
-    for tf_name, period_days in timeframe_checks:
+    for tf_name, period, interval in checks:
         try:
-            data = safe_download(ticker, period_days=period_days)
+            data = fetch_yahoo(ticker, period=period, interval=interval)
             if data.empty or len(data) < 15:
+                details[tf_name] = {"rsi": None, "note": "no data"}
                 continue
-
-            if tf_name == "weekly":
-                data = data.resample("W").agg({
-                    "Open":  "first",
-                    "High":  "max",
-                    "Low":   "min",
-                    "Close": "last",
-                    "Volume":"sum"
-                }).dropna()
 
             rsi_series  = get_rsi(data["Close"])
             current_rsi = float(rsi_series.iloc[-1])
@@ -109,9 +137,9 @@ def get_ma_score(ticker):
     details = {}
 
     try:
-        data = safe_download(ticker, period_days=600)
+        data = fetch_yahoo(ticker, period="2y", interval="1d")
         if data.empty or len(data) < 50:
-            return 0, {}
+            return 0, {"note": "insufficient data"}
 
         close         = data["Close"]
         current_price = float(close.iloc[-1])
@@ -126,8 +154,6 @@ def get_ma_score(ticker):
 
         if ma200:
             above_200 = current_price > ma200
-            details["above_200ma"] = above_200
-
             if above_200:
                 score += 1
                 details["ma_signal"] = "✅ Above 200MA"
@@ -141,16 +167,16 @@ def get_ma_score(ticker):
 
                 if golden_cross:
                     score += 2
-                    details["cross"] = "🔥 GOLDEN CROSS just formed!"
+                    details["cross"] = "🔥 GOLDEN CROSS!"
                 elif active_golden:
                     score += 1
                     details["cross"] = "✅ Golden Cross active"
                 elif death_cross:
-                    details["cross"] = "🔴 DEATH CROSS just formed"
+                    details["cross"] = "🔴 DEATH CROSS"
 
         if ma200 and abs(current_price - ma200) / ma200 < 0.02:
             score += 1
-            details["near_200ma"] = "📍 Price at 200MA key level"
+            details["near_200ma"] = "📍 At 200MA"
 
     except Exception as e:
         details["error"] = str(e)
@@ -162,7 +188,7 @@ def get_ad_score(ticker):
     details = {}
 
     try:
-        data = safe_download(ticker, period_days=120)
+        data = fetch_yahoo(ticker, period="3mo", interval="1d")
         if data.empty or len(data) < 20:
             return 0, {}
 
@@ -170,13 +196,11 @@ def get_ad_score(ticker):
         recent_ad = ad_line.tail(5)
         ad_rising = recent_ad.iloc[-1] > recent_ad.iloc[0]
 
-        details["ad_rising"] = ad_rising
-
         if ad_rising:
             score = 1
             details["signal"] = "✅ Institutions accumulating"
         else:
-            details["signal"] = "⚠️ A/D flat/declining"
+            details["signal"] = "⚠️ A/D declining"
 
     except Exception as e:
         details["error"] = str(e)
@@ -196,7 +220,7 @@ def detect_patterns(ticker):
     details  = {}
 
     try:
-        data = safe_download(ticker, period_days=200)
+        data = fetch_yahoo(ticker, period="6mo", interval="1d")
         if data.empty or len(data) < 20:
             return patterns, details
 
@@ -205,6 +229,7 @@ def detect_patterns(ticker):
         low     = data["Low"].values
         volume  = data["Volume"].values
         current = close[-1]
+        avg_vol = volume[-20:].mean()
 
         # Support & Resistance
         recent_high = max(high[-20:])
@@ -212,27 +237,21 @@ def detect_patterns(ticker):
 
         if abs(current - recent_low) / current < 0.03:
             patterns.append(f"📍 Near Support: ${recent_low:.2f}")
-            details["support"] = round(float(recent_low), 2)
 
         if abs(current - recent_high) / current < 0.02:
             patterns.append(f"🚀 Testing Resistance: ${recent_high:.2f}")
 
-        # Breakout with volume
-        avg_vol = volume[-20:].mean()
+        # Breakout
         if len(high) > 21 and current > max(high[-21:-1]) and avg_vol > 0 and volume[-1] > avg_vol * 1.5:
-            patterns.append("🚀 BREAKOUT — Above 20D high with volume!")
-            details["breakout"] = True
+            patterns.append("🚀 BREAKOUT with volume!")
 
         # Volume Spike
         if avg_vol > 0 and volume[-1] > avg_vol * 2:
-            patterns.append(f"🔊 Volume Spike: {volume[-1]/avg_vol:.1f}x average")
+            patterns.append(f"🔊 Volume Spike: {volume[-1]/avg_vol:.1f}x")
 
         # Fibonacci
         if len(high) >= 50:
-            swing_high = max(high[-50:])
-            swing_low  = min(low[-50:])
-            fibs       = get_fibonacci_levels(swing_high, swing_low)
-
+            fibs = get_fibonacci_levels(max(high[-50:]), min(low[-50:]))
             for level_name, level_price in fibs.items():
                 if level_price > 0 and abs(current - level_price) / level_price < 0.015:
                     emoji = "🌟" if level_name == "61.8%" else "📐"
@@ -249,17 +268,10 @@ def detect_patterns(ticker):
 
         # Market Structure
         if len(high) >= 10:
-            hh = high[-1] > high[-5] and high[-5] > high[-10]
-            hl = low[-1]  > low[-5]  and low[-5]  > low[-10]
-            lh = high[-1] < high[-5]
-            ll = low[-1]  < low[-5]
-
-            if hh and hl:
-                patterns.append("📈 Higher Highs & Lows (Uptrend)")
-                details["structure"] = "uptrend"
-            elif lh and ll:
-                patterns.append("📉 Lower Highs & Lows (Downtrend)")
-                details["structure"] = "downtrend"
+            if high[-1] > high[-5] > high[-10] and low[-1] > low[-5] > low[-10]:
+                patterns.append("📈 Uptrend: Higher Highs & Lows")
+            elif high[-1] < high[-5] and low[-1] < low[-5]:
+                patterns.append("📉 Downtrend: Lower Highs & Lows")
 
         # Fair Value Gap
         for i in range(2, len(close)):
@@ -271,23 +283,6 @@ def detect_patterns(ticker):
         details["error"] = str(e)
 
     return patterns, details
-
-def get_fundamentals_score(ticker):
-    score   = 0
-    details = {}
-    try:
-        url     = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?range=1d&interval=1d"
-        headers = {"User-Agent": "Mozilla/5.0"}
-        resp    = requests.get(url, headers=headers, timeout=8)
-        if resp.status_code == 200:
-            data  = resp.json()
-            meta  = data.get("chart", {}).get("result", [{}])[0].get("meta", {})
-            price = meta.get("regularMarketPrice", 0)
-            if price:
-                details["price"] = price
-    except Exception as e:
-        details["error"] = str(e)
-    return min(int(score), 2), details
 
 def analyze_ticker(ticker, name=""):
     print(f"  Analyzing {ticker}...")
@@ -307,7 +302,6 @@ def analyze_ticker(ticker, name=""):
     }
 
     try:
-        # RSI Score (0-3)
         rsi_score, rsi_details, _ = get_rsi_score(ticker)
         result["score"] += rsi_score
         result["rsi"]    = rsi_details
@@ -317,7 +311,6 @@ def analyze_ticker(ticker, name=""):
             if tfs:
                 result["signals"].append(f"RSI oversold on {', '.join(tfs).upper()}")
 
-        # MA Score (0-3)
         ma_score, ma_details = get_ma_score(ticker)
         result["score"] += ma_score
         result["ma"]     = ma_details
@@ -326,26 +319,21 @@ def analyze_ticker(ticker, name=""):
         if ma_details.get("ma_signal"):
             result["signals"].append(ma_details["ma_signal"])
 
-        # A/D Score (0-1)
         ad_score, ad_details = get_ad_score(ticker)
         result["score"] += ad_score
         result["ad"]     = ad_details
         if ad_score > 0:
             result["signals"].append("A/D rising — institutions loading")
 
-        # Pattern Score (0-2)
         patterns, _ = detect_patterns(ticker)
         result["patterns"] = patterns
         if patterns:
             result["score"] += min(len(patterns), 2)
             result["signals"].extend(patterns[:2])
 
-        # Fundamentals Score (0-2)
-        fund_score, fund_details = get_fundamentals_score(ticker)
-        result["score"]        += fund_score
-        result["fundamentals"]  = fund_details
+        # Print debug score
+        print(f"    Score: {result['score']} | RSI:{rsi_score} MA:{ma_score} AD:{ad_score} Patterns:{len(patterns)}")
 
-        # Buy Rating
         s = result["score"]
         if s >= 7:
             result["buy_rating"] = "🔥 STRONG BUY"
@@ -362,6 +350,6 @@ def analyze_ticker(ticker, name=""):
 
     except Exception as e:
         result["error"] = str(e)
-        print(f"  Error analyzing {ticker}: {e}")
+        print(f"  Error: {e}")
 
     return result
