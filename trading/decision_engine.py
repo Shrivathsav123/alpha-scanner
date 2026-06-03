@@ -5,6 +5,10 @@ import json
 import requests
 import os
 from datetime import datetime
+try:
+    from trading.memory import get_memory_context
+except:
+    def get_memory_context(): return 'No trade history yet.'
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
@@ -198,7 +202,12 @@ def make_trading_decision(scan_results, portfolio, macro, current_prices):
 
     max_position = portfolio["total_value"] * 0.10
 
+    memory_context = get_memory_context()
+
     prompt = f"""Time: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}
+
+YOUR TRADE HISTORY & LESSONS:
+{memory_context}
 
 PORTFOLIO:
 {json.dumps(portfolio_summary, indent=2)}
