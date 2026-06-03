@@ -406,3 +406,40 @@ STOCK_TO_ETF = {
 
 # All tickers combined for US scan
 ALL_US = {**US_STOCKS, **SECTOR_ETFS}
+# ── BOTTLENECK STOCKS ─────────────────────────────────────────
+BOTTLENECK_STOCKS = {
+    "LITE":  "Lumentum Holdings (photonics)",
+    "COHR":  "Coherent Corp (optical)",
+    "MTSI":  "MACOM Technology (RF + optical)",
+    "FN":    "Fabrinet (optical manufacturing)",
+    "VIAV":  "VIAVI Solutions (optical testing)",
+    "AMAT":  "Applied Materials (chip packaging)",
+    "LRCX":  "Lam Research (etch equipment)",
+    "KLAC":  "KLA Corporation (inspection)",
+    "ONTO":  "Onto Innovation (packaging inspection)",
+    "VICR":  "Vicor Corp (AI power components)",
+    "MPWR":  "Monolithic Power Systems",
+    "VRT":   "Vertiv Holdings (data centre cooling)",
+    "MOD":   "Modine Manufacturing (thermal)",
+    "ETN":   "Eaton Corp (power management)",
+    "POWL":  "Powell Industries (transformers)",
+    "CEG":   "Constellation Energy (nuclear)",
+    "VST":   "Vistra Corp (power generation)",
+    "FCX":   "Freeport-McMoRan (copper)",
+    "SCCO":  "Southern Copper Corp",
+    "APD":   "Air Products (specialty gases)",
+    "LIN":   "Linde PLC (industrial gases)",
+    "ANET":  "Arista Networks (AI networking)",
+    "MRVL":  "Marvell Technology (networking)",
+    "APH":   "Amphenol (connectors)",
+    "TTMI":  "TTM Technologies (PCBs)",
+    "CDNS":  "Cadence Design Systems (EDA)",
+    "SNPS":  "Synopsys (chip design)",
+    "SMCI":  "Super Micro Computer (AI servers)",
+    "CCJ":   "Cameco Corp (uranium)",
+    "KTOS":  "Kratos Defense (AI drones)",
+    "INFN":  "Infinera Corp (optical networking)",
+    "CIEN":  "Ciena Corp (optical equipment)",
+    "ACMR":  "ACM Research (cleaning equipment)",
+}
+
