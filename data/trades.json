@@ -1,5 +1,42 @@
 [
   {
+    "type": "BUY",
+    "ticker": "ASML",
+    "name": "ASML Holding",
+    "shares": 10,
+    "price": 1726.36,
+    "cost": 17263.6,
+    "trade_type": "swing",
+    "score": 5,
+    "reasoning": "Ultimate semiconductor bottleneck - every advanced chip requires ASML's EUV lithography machines. Golden Cross + above 200MA + institutional buying. This is the monopoly supplier to NVDA/AMD/TSM supply chain.",
+    "date": "2026-06-03T23:12:59.419100"
+  },
+  {
+    "type": "BUY",
+    "ticker": "AMAT",
+    "name": "Applied Materials",
+    "shares": 36,
+    "price": 500.77,
+    "cost": 18027.72,
+    "trade_type": "swing",
+    "score": 5,
+    "reasoning": "Perfect redemption play - previously lost on AMAT by buying at resistance, now it's showing clear breakout with AMD strength driving derived demand. Golden Cross + above 200MA + institutional accumulation. This is the bottleneck play as AMD runs.",
+    "date": "2026-06-03T23:12:58.737841"
+  },
+  {
+    "type": "SELL",
+    "ticker": "APD",
+    "name": "Air Products (specialty gases)",
+    "shares": 64,
+    "entry_price": 283.63,
+    "sell_price": 282.27,
+    "pnl": -87.04,
+    "pnl_pct": -0.48,
+    "reason": "Position barely holding above water with -0.48% PnL and no clear catalyst. Better opportunities available in semiconductor bottlenecks with stronger momentum. Applying lesson from AMAT - avoid holding weak positions when better setups exist.",
+    "trade_type": "swing",
+    "date": "2026-06-03T23:12:58.058842"
+  },
+  {
     "type": "SELL",
     "ticker": "AMAT",
     "name": "Applied Materials",
