@@ -1,12 +1,13 @@
-# telegram_alerts.py — Clean, beautiful Telegram alerts
+# telegram_alerts.py — Professional, clean signal format
 import requests
 import os
+from datetime import datetime, timezone
 
 TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
 }
 
 def get_current_price(ticker):
@@ -19,11 +20,12 @@ def get_current_price(ticker):
             if result:
                 meta  = result[0].get("meta", {})
                 price = meta.get("regularMarketPrice") or meta.get("previousClose")
+                chg   = meta.get("regularMarketChangePercent", 0)
                 if price:
-                    return round(float(price), 2)
+                    return round(float(price), 2), round(float(chg), 2)
     except:
         pass
-    return None
+    return None, None
 
 def get_hold_duration(result):
     rsi_data     = result.get("rsi", {})
@@ -37,17 +39,17 @@ def get_hold_duration(result):
     above_200    = ma_data.get("above_200ma", False)
 
     if weekly_str and daily_str and above_200:
-        return "2–6 months", "Long Term Investment", "RSI > 70 weekly or thesis breaks"
+        return "2-6 months", "Long Term Investment", "RSI > 70 weekly or thesis breaks"
     elif weekly_os and daily_os:
-        return "2–6 weeks", "Swing Trade", "RSI > 65 daily or +15–20%"
+        return "2-6 weeks", "Swing Trade", "RSI > 65 daily or +15-20%"
     elif golden_cross:
-        return "1–3 months", "Momentum Trade", "Death Cross forms or RSI > 75 weekly"
+        return "1-3 months", "Momentum Trade", "Death Cross or RSI > 75 weekly"
     elif daily_os:
-        return "5–15 days", "Short Swing", "RSI > 60 daily or +8–12%"
+        return "5-15 days", "Short Swing", "RSI > 60 daily or +8-12%"
     elif score >= 5:
-        return "1–2 weeks", "Technical Setup", "Break below support or +5–8%"
+        return "1-2 weeks", "Technical Setup", "Break below support or +5-8%"
     else:
-        return "2–7 days", "News Play", "Catalyst plays out"
+        return "2-7 days", "News Play", "Catalyst plays out"
 
 def send(text):
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
@@ -73,65 +75,82 @@ def format_stock_alert(result, news_signals=[], macro_env="NEUTRAL"):
     ticker   = result["ticker"]
     name     = result["name"]
     score    = result["score"]
-    rating   = result["buy_rating"]
     rsi_data = result.get("rsi", {})
     ma_data  = result.get("ma", {})
     patterns = result.get("patterns", [])
 
     # Price
-    price     = get_current_price(ticker)
-    price_str = f"${price:,.2f}" if price else "—"
+    price, price_chg = get_current_price(ticker)
+    price_str = f"${price:,.2f}  ({price_chg:+.2f}%)" if price else "—"
 
     # Hold
     duration, trade_type, exit_rule = get_hold_duration(result)
 
-    # Rating emoji only
-    rating_emoji = "🔥" if score >= 7 else "⚡" if score >= 5 else "👀"
+    # Rating — clean text only
+    if score >= 7:
+        rating = "STRONG BUY"
+    elif score >= 5:
+        rating = "BUY"
+    else:
+        rating = "WATCH"
 
-    # RSI per timeframe — clean one liner
-    rsi_parts = []
+    # RSI — clean one line per timeframe
+    rsi_lines = []
     for tf, d in rsi_data.items():
         if isinstance(d, dict) and d.get("rsi"):
-            flag = "🔥" if d.get("strong_oversold") else "⚡" if d.get("oversold") else ""
-            rsi_parts.append(f"{tf.upper()} {d['rsi']} {d.get('direction','')} {flag}".strip())
-    rsi_line = " │ ".join(rsi_parts) if rsi_parts else "No data"
+            flag = " [OVERSOLD]" if d.get("strong_oversold") else (" [oversold]" if d.get("oversold") else "")
+            rsi_lines.append(f"  {tf.upper():<8}{d['rsi']}{d.get('direction','')} {flag}".rstrip())
 
-    # MA clean line
-    ma_line   = ma_data.get("ma_signal", "—")
-    cross_line = ma_data.get("cross", "")
-    ma50      = ma_data.get("ma50", "—")
-    ma200     = ma_data.get("ma200", "—")
+    rsi_block = "\n".join(rsi_lines) if rsi_lines else "  No data"
 
-    # Top pattern only
-    top_pattern = patterns[0] if patterns else "—"
+    # MA block
+    ma_signal  = ma_data.get("ma_signal", "—").replace("✅ ", "").replace("⚠️ ", "")
+    cross      = ma_data.get("cross", "").replace("🔥 ", "").replace("✅ ", "").replace("🔴 ", "")
+    ma50       = ma_data.get("ma50", "—")
+    ma200      = ma_data.get("ma200", "—")
 
-    # Top news only
-    top_news = news_signals[0]["title"][:80] if news_signals else "No recent news"
-    news_sentiment = "✅" if news_signals and news_signals[0].get("score", 0) > 0 else "📰"
+    # Top pattern — clean text
+    clean_patterns = []
+    for p in patterns[:3]:
+        clean = p.replace("📍 ", "").replace("🚀 ", "").replace("🔊 ", "").replace("📊 ", "").replace("⚡ ", "").replace("⚠️ ", "").replace("📈 ", "").replace("📉 ", "").replace("🌟 ", "").replace("📐 ", "").replace("🟢 ", "")
+        clean_patterns.append(clean)
+
+    pattern_block = "\n  ".join(clean_patterns) if clean_patterns else "None detected"
+
+    # News — clean
+    news_line = news_signals[0]["title"][:80] if news_signals else "No recent news"
+
+    # Timestamp
+    now = datetime.now(timezone.utc).strftime("%d %b %Y  %H:%M UTC")
 
     msg = (
-        f"{rating_emoji} <b>${ticker}</b>  ·  {name}\n"
-        f"━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"💰 <b>{price_str}</b>  ·  Score <b>{score}/12</b>  ·  {macro_env}\n"
+        f"<code>ALPHA SCANNER  |  {now}</code>\n"
+        f"<code>{'─'*38}</code>\n"
         f"\n"
-        f"⏱ <b>{duration}</b>  ·  {trade_type}\n"
-        f"🟢 Entry  →  now or on dip\n"
-        f"🔴 Exit   →  {exit_rule}\n"
+        f"<b>{rating}</b>  |  <b>${ticker}</b>  |  Score {score}/12\n"
+        f"{name}  |  {price_str}\n"
         f"\n"
-        f"📊 RSI  ·  {rsi_line}\n"
-        f"📈 MA   ·  {ma_line}\n"
+        f"<code>HOLD     {duration}  |  {trade_type}</code>\n"
+        f"<code>Entry    Now or on dip</code>\n"
+        f"<code>Exit     {exit_rule}</code>\n"
+        f"\n"
+        f"<code>RSI</code>\n"
+        f"<code>{rsi_block}</code>\n"
+        f"\n"
+        f"<code>MA       {ma_signal}</code>\n"
     )
 
-    if cross_line:
-        msg += f"         {cross_line}\n"
+    if cross:
+        msg += f"<code>         {cross}</code>\n"
 
     msg += (
-        f"         50MA ${ma50}  ·  200MA ${ma200}\n"
+        f"<code>         50MA ${ma50}  |  200MA ${ma200}</code>\n"
         f"\n"
-        f"📐 Pattern  ·  {top_pattern}\n"
-        f"{news_sentiment} News  ·  {top_news}\n"
+        f"<code>PATTERN  {pattern_block}</code>\n"
+        f"<code>NEWS     {news_line}</code>\n"
+        f"<code>MACRO    {macro_env.replace(' 🟢','').replace(' 🔴','').replace(' 🟡','').replace(' 🟠','').replace(' ⚪','')}</code>\n"
         f"\n"
-        f"<i>⚠️ Not financial advice</i>"
+        f"<i>Not financial advice</i>"
     )
 
     return msg
@@ -141,60 +160,64 @@ def format_scan_summary(results, macro):
     good   = [r for r in results if 5 <= r["score"] < 7]
     watch  = [r for r in results if 3 <= r["score"] < 5]
 
-    vix   = macro.get("vix", {})
-    dxy   = macro.get("dxy", {})
-    bonds = macro.get("bonds", {})
-    fred  = macro.get("fred", {})
+    vix       = macro.get("vix", {})
+    dxy       = macro.get("dxy", {})
+    bonds     = macro.get("bonds", {})
+    fred      = macro.get("fred", {})
+    bond_etfs = macro.get("bond_etfs", {})
 
-    def fmt(lst):
-        return "  ".join([f"<b>${r['ticker']}</b>" for r in lst[:5]]) or "—"
+    tlt = bond_etfs.get("TLT", {})
+    edv = bond_etfs.get("EDV", {})
+    iev = bond_etfs.get("IEV", {})
 
-    vix_val   = vix.get('value', 'N/A')
-    dxy_val   = dxy.get('value', 'N/A')
-    yield_val = bonds.get('yield_10yr', 'N/A')
-    fed_val   = fred.get('fed_rate', {}).get('value', 'N/A')
+    def tickers(lst):
+        return "  ".join([f"${r['ticker']}" for r in lst[:6]]) or "—"
 
-    vix_sig   = "🟢" if isinstance(vix_val, float) and vix_val < 20 else "🔴" if isinstance(vix_val, float) and vix_val > 30 else "🟡"
-    dxy_chg   = dxy.get('change', 0)
-    dxy_sig   = "🟢" if isinstance(dxy_chg, float) and dxy_chg < -0.3 else "🔴" if isinstance(dxy_chg, float) and dxy_chg > 0.3 else "🟡"
+    now = datetime.now(timezone.utc).strftime("%d %b %Y  %H:%M UTC")
+    env = macro.get('environment','?').replace(' 🟢','').replace(' 🔴','').replace(' 🟡','').replace(' 🟠','').replace(' ⚪','')
 
     return (
-        f"🔍 <b>ALPHA SCANNER  ·  DAILY DIGEST</b>\n"
-        f"━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"🌍 Macro  ·  {macro.get('environment','?')}\n"
+        f"<code>ALPHA SCANNER  |  {now}</code>\n"
+        f"<code>{'─'*38}</code>\n"
         f"\n"
-        f"{vix_sig} VIX {vix_val}  ·  "
-        f"{dxy_sig} DXY {dxy_val}  ·  "
-        f"📉 Yield {yield_val}%  ·  "
-        f"🏦 Fed {fed_val}%\n"
+        f"<b>MACRO  |  {env}</b>\n"
         f"\n"
-        f"🔥 Strong Buy  ·  {fmt(strong)}\n"
-        f"⚡ Good Setup  ·  {fmt(good)}\n"
-        f"👀 Watch       ·  {fmt(watch)}\n"
+        f"<code>VIX      {vix.get('value','N/A')}  ({vix.get('change',0):+.1f}%)</code>\n"
+        f"<code>DXY      {dxy.get('value','N/A')}  ({dxy.get('change',0):+.2f}%)</code>\n"
+        f"<code>10yr     {bonds.get('yield_10yr','N/A')}%  |  Fed {fred.get('fed_rate',{}).get('value','N/A')}%</code>\n"
         f"\n"
-        f"<i>{len(results)} scanned  ·  ⚠️ Not financial advice</i>"
+        f"<code>BONDS</code>\n"
+        f"<code>TLT      ${tlt.get('price','N/A')}  ({tlt.get('change',0):+.2f}%)</code>\n"
+        f"<code>EDV      ${edv.get('price','N/A')}  ({edv.get('change',0):+.2f}%)</code>\n"
+        f"<code>IEV      ${iev.get('price','N/A')}  ({iev.get('change',0):+.2f}%)</code>\n"
+        f"\n"
+        f"<code>{'─'*38}</code>\n"
+        f"<b>STRONG BUY</b>   {tickers(strong)}\n"
+        f"<b>BUY</b>          {tickers(good)}\n"
+        f"<b>WATCH</b>        {tickers(watch)}\n"
+        f"\n"
+        f"<code>{len(results)} stocks scanned</code>\n"
+        f"<i>Not financial advice</i>"
     )
 
 def send_startup_message():
+    now = datetime.now(timezone.utc).strftime("%d %b %Y  %H:%M UTC")
     send(
-        "🚀 <b>ALPHA SCANNER  ·  ONLINE</b>\n"
-        "━━━━━━━━━━━━━━━━━━━━━━\n"
-        "Rules loaded:\n"
-        "✅ RSI  ·  Daily + Weekly\n"
-        "✅ MA   ·  50 + 200  ·  Golden/Death Cross\n"
-        "✅ A/D  ·  Institutional flow\n"
-        "✅ Patterns  ·  FVG, Breakout, Fib, S&R\n"
-        "✅ Macro  ·  VIX, DXY, Yields, CPI, Fed\n"
-        "✅ News  ·  Ticker-specific catalysts\n"
-        "\n"
-        "Every alert includes:\n"
-        "💰 Real-time price\n"
-        "⏱ Hold duration + trade type\n"
-        "🟢 Entry  ·  🔴 Exit strategy\n"
-        "\n"
-        "🔥 7+  ·  Strong Buy\n"
-        "⚡ 5–6  ·  Good Setup\n"
-        "👀 3–4  ·  Watch\n"
-        "\n"
-        "<i>Scanning 5× daily. Building your track record.</i>"
+        f"<code>ALPHA SCANNER  |  {now}</code>\n"
+        f"<code>{'─'*38}</code>\n"
+        f"\n"
+        f"<b>SYSTEM ONLINE</b>\n"
+        f"\n"
+        f"<code>Rules loaded</code>\n"
+        f"<code>RSI        Daily + Weekly timeframes</code>\n"
+        f"<code>MA         50 + 200  |  Golden/Death Cross</code>\n"
+        f"<code>A/D        Institutional flow</code>\n"
+        f"<code>Patterns   FVG, Breakout, Fib, S&R</code>\n"
+        f"<code>Macro      VIX, DXY, TLT, EDV, IEV, Yields</code>\n"
+        f"<code>News       Ticker-specific catalysts</code>\n"
+        f"\n"
+        f"<code>Scoring    7+ Strong Buy  |  5-6 Buy  |  3-4 Watch</code>\n"
+        f"<code>Schedule   5x daily  |  IST timezone</code>\n"
+        f"\n"
+        f"<i>Not financial advice</i>"
     )
