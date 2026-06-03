@@ -10,6 +10,10 @@ from trading.portfolio import (
     check_stop_losses, STARTING_BALANCE
 )
 from trading.decision_engine import make_trading_decision
+try:
+    from trading.memory import record_trade_outcome
+except:
+    def record_trade_outcome(*a, **k): pass
 from macro import get_macro_environment
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
@@ -126,6 +130,9 @@ def run_trader():
     for stop_msg in stops:
         print(f"  {stop_msg}")
         send_telegram("<code>STOP LOSS TRIGGERED</code>\n<b>" + stop_msg + "</b>\n<i>-7% limit hit — closed automatically</i>")
+        try:
+            record_trade_outcome({"ticker": stop_msg.split(":")[1].strip().split(" ")[0] if ":" in stop_msg else "", "reasoning": "Stop loss triggered", "entry_price": 0, "shares": 0}, -7.0, 0, macro.get("environment","NEUTRAL"))
+        except: pass
 
     # AI decisions
     print("[Trader] Asking AI for decisions...")
@@ -194,6 +201,15 @@ def run_trader():
                 pnl_pct = round((price - pos["entry_price"]) / pos["entry_price"] * 100, 2)
                 print(f"  SELL {ticker} @ ${price} | P&L: ${pnl:+,.0f} ({pnl_pct:+.1f}%)")
                 trades_made.append(action)
+                # Record lesson for AI learning
+                try:
+                    from datetime import datetime as dt
+                    entry_date = pos.get("entry_date", datetime.utcnow().isoformat())
+                    held = max(1, (dt.utcnow() - dt.fromisoformat(entry_date.replace("Z",""))).days)
+                    trade_record = {**pos, "sell_price": price, "ticker": ticker}
+                    record_trade_outcome(trade_record, pnl_pct, held, macro.get("environment","NEUTRAL"))
+                except Exception as me:
+                    print(f"  Memory record error: {me}")
                 alert  = f"<code>TRADE  |  {datetime.utcnow().strftime('%d %b %Y  %H:%M UTC')}</code>\n"
                 alert += "<code>" + "─"*35 + "</code>\n\n"
                 alert += f"<b>SELL  |  ${ticker}</b>\n"
