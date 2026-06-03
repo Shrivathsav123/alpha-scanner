@@ -1,0 +1,38 @@
+{
+  "lessons": [
+    {
+      "date": "2026-06-03T17:02:40.541479",
+      "ticker": "AMAT",
+      "trade_type": "swing",
+      "entry": 503.7,
+      "exit": 499.5,
+      "pnl_pct": -0.83,
+      "held_days": 1,
+      "won": false,
+      "reasoning": "Semiconductor equipment leader testing resistance at $504.58. Every AI chip needs AMAT's tools to be manufactured. Golden Cross + above 200MA + institutional accumulation. Testing breakout level.",
+      "macro": "CAUTIOUS \ud83d\udfe0",
+      "lesson": "LOSS on AMAT (-0.8%). Bought near resistance \u2014 avoid entries at resistance levels next time."
+    }
+  ],
+  "winning_setups": [],
+  "losing_setups": [
+    {
+      "ticker": "AMAT",
+      "pnl_pct": -0.83,
+      "reasoning": "Semiconductor equipment leader testing resistance at $504.58. Every AI chip needs AMAT's tools to be manufactured. Golden Cross + above 200MA + instit",
+      "mistake": "Entered near resistance \u2014 bought into selling pressure"
+    }
+  ],
+  "stats": {
+    "total_trades": 1,
+    "wins": 0,
+    "losses": 1,
+    "win_rate": 0.0,
+    "avg_win_pct": 0,
+    "avg_loss_pct": -0.83,
+    "profit_factor": 0.0,
+    "best_trade": -0.83,
+    "worst_trade": -0.83
+  },
+  "updated": "2026-06-03T17:02:40.541521"
+}

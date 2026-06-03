@@ -1,5 +1,18 @@
 [
   {
+    "type": "SELL",
+    "ticker": "AMAT",
+    "name": "Applied Materials",
+    "shares": 36,
+    "entry_price": 503.7,
+    "sell_price": 499.5,
+    "pnl": -151.2,
+    "pnl_pct": -0.83,
+    "reason": "Taking profit at resistance $499.5 near the $508 level with only -0.83% loss. Better to redeploy into stronger momentum plays that haven't hit resistance yet.",
+    "trade_type": "swing",
+    "date": "2026-06-03T17:02:40.541142"
+  },
+  {
     "type": "BUY",
     "ticker": "KLAC",
     "name": "KLA Corporation",
