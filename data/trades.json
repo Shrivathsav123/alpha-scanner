@@ -1,6 +1,42 @@
 [
   {
     "type": "BUY",
+    "ticker": "AMAT",
+    "name": "Applied Materials",
+    "shares": 36,
+    "price": 503.7,
+    "cost": 18133.2,
+    "trade_type": "swing",
+    "score": 5,
+    "reasoning": "Semiconductor equipment leader testing resistance at $504.58. Every AI chip needs AMAT's tools to be manufactured. Golden Cross + above 200MA + institutional accumulation. Testing breakout level.",
+    "date": "2026-06-03T14:49:02.486730"
+  },
+  {
+    "type": "BUY",
+    "ticker": "CDNS",
+    "name": "Cadence Design Systems (EDA)",
+    "shares": 44,
+    "price": 408.18,
+    "cost": 17959.92,
+    "trade_type": "swing",
+    "score": 5,
+    "reasoning": "EDA monopoly with literal pricing power - every chip starts as software design. Golden Cross + above 200MA + uptrend intact. This is the ultimate bottleneck as AI chip demand explodes.",
+    "date": "2026-06-03T14:49:01.796274"
+  },
+  {
+    "type": "BUY",
+    "ticker": "ANET",
+    "name": "Arista Networks",
+    "shares": 105,
+    "price": 173.42,
+    "cost": 18209.1,
+    "trade_type": "swing",
+    "score": 5,
+    "reasoning": "Perfect bottleneck play - AMZN is strong in our portfolio and ANET supplies it directly via data center networking. Golden Cross active + above 200MA + institutions loading. This is classic derived demand catching up.",
+    "date": "2026-06-03T14:49:01.090774"
+  },
+  {
+    "type": "BUY",
     "ticker": "APD",
     "name": "Air Products (specialty gases)",
     "shares": 64,
