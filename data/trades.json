@@ -1,6 +1,42 @@
 [
   {
     "type": "BUY",
+    "ticker": "KLAC",
+    "name": "KLA Corporation",
+    "shares": 8,
+    "price": 2083.14,
+    "cost": 16665.12,
+    "trade_type": "swing",
+    "score": 4,
+    "reasoning": "Metrology equipment monopoly testing $2103 resistance with Golden Cross + institutional accumulation. KLAC inspects every chip in production - pure bottleneck play as AI chip demand explodes. Higher highs/lows pattern intact with strong momentum.",
+    "date": "2026-06-03T16:03:45.909086"
+  },
+  {
+    "type": "BUY",
+    "ticker": "LRCX",
+    "name": "Lam Research",
+    "shares": 53,
+    "price": 339.26,
+    "cost": 17980.78,
+    "trade_type": "swing",
+    "score": 4,
+    "reasoning": "Semiconductor equipment bottleneck testing resistance at $345 - every AI chip needs LRCX etching tools. Golden Cross active with A/D rising shows institutions accumulating. Testing breakout while semis are strong creates perfect derived demand setup.",
+    "date": "2026-06-03T16:03:45.392495"
+  },
+  {
+    "type": "BUY",
+    "ticker": "MRVL",
+    "name": "Marvell Technology",
+    "shares": 59,
+    "price": 305.52,
+    "cost": 18025.68,
+    "trade_type": "swing",
+    "score": 4,
+    "reasoning": "Perfect bottleneck play with BREAKOUT confirmation on volume - this is institutional buying. MRVL supplies custom chips for AI data centers while NVDA/AMD already ran. Golden Cross + above 200MA creates low-risk entry on momentum continuation.",
+    "date": "2026-06-03T16:03:44.847018"
+  },
+  {
+    "type": "BUY",
     "ticker": "AMAT",
     "name": "Applied Materials",
     "shares": 36,
