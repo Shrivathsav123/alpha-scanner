@@ -1,5 +1,35 @@
 [
   {
+    "ticker": "GOOGL",
+    "name": "Alphabet (Google)",
+    "score": 4,
+    "max": 12,
+    "signals": [
+      "RSI oversold on DAILY",
+      "\u2705 Golden Cross active",
+      "\u2705 Above 200MA",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows"
+    ],
+    "ma": {
+      "price": 372.19,
+      "ma50": 352.95,
+      "ma200": 303.21,
+      "ma_signal": "\u2705 Above 200MA",
+      "cross": "\u2705 Golden Cross active"
+    },
+    "ad": {
+      "signal": "\u26a0\ufe0f A/D declining"
+    },
+    "patterns": [
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows"
+    ],
+    "fundamentals": {},
+    "buy_rating": "WATCH",
+    "conviction": "LOW",
+    "news_signals": [],
+    "market": "US"
+  },
+  {
     "ticker": "ARKK",
     "name": "ARK Innovation ETF",
     "score": 4,
@@ -11,7 +41,7 @@
       "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
     ],
     "ma": {
-      "price": 79.95,
+      "price": 80.07,
       "ma50": 75.19,
       "ma200": 78.06,
       "ma_signal": "\u2705 Above 200MA"
@@ -41,8 +71,8 @@
       "\ud83d\udcc9 Downtrend: Lower Highs & Lows"
     ],
     "ma": {
-      "price": 139.95,
-      "ma50": 128.39,
+      "price": 139.54,
+      "ma50": 128.38,
       "ma200": 118.99,
       "ma_signal": "\u2705 Above 200MA",
       "cross": "\u2705 Golden Cross active"
@@ -60,126 +90,31 @@
     "market": "US"
   },
   {
-    "ticker": "ARKF",
-    "name": "ARK Fintech Innovation ETF",
-    "score": 4,
+    "ticker": "NOW",
+    "name": "ServiceNow",
+    "score": 2,
     "max": 12,
     "signals": [
-      "RSI oversold on DAILY, WEEKLY",
       "\u26a0\ufe0f Below 200MA",
-      "\ud83d\udccd Near Support: $39.78",
-      "\ud83d\udcd0 Fib 50.0%: $40.03"
+      "\ud83d\udcc8 Uptrend: Higher Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
     ],
     "ma": {
-      "price": 40.24,
-      "ma50": 40.92,
-      "ma200": 47.0,
+      "price": 119.36,
+      "ma50": 98.87,
+      "ma200": 140.5,
       "ma_signal": "\u26a0\ufe0f Below 200MA"
     },
     "ad": {
       "signal": "\u26a0\ufe0f A/D declining"
     },
     "patterns": [
-      "\ud83d\udccd Near Support: $39.78",
-      "\ud83d\udcd0 Fib 50.0%: $40.03",
-      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
-      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
-    ],
-    "fundamentals": {},
-    "buy_rating": "WATCH",
-    "conviction": "LOW",
-    "news_signals": [],
-    "market": "US"
-  },
-  {
-    "ticker": "IGV",
-    "name": "iShares Software ETF",
-    "score": 4,
-    "max": 12,
-    "signals": [
-      "\u2705 Above 200MA",
-      "A/D rising \u2014 institutions loading",
-      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
-    ],
-    "ma": {
-      "price": 99.92,
-      "ma50": 87.45,
-      "ma200": 98.72,
-      "ma_signal": "\u2705 Above 200MA",
-      "near_200ma": "\ud83d\udccd At 200MA"
-    },
-    "ad": {
-      "signal": "\u2705 Institutions accumulating"
-    },
-    "patterns": [
-      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
-    ],
-    "fundamentals": {},
-    "buy_rating": "WATCH",
-    "conviction": "LOW",
-    "news_signals": [],
-    "market": "US"
-  },
-  {
-    "ticker": "WCLD",
-    "name": "WisdomTree Cloud Computing",
-    "score": 4,
-    "max": 12,
-    "signals": [
-      "\u2705 Above 200MA",
-      "A/D rising \u2014 institutions loading",
-      "\u26a0\ufe0f Bearish RSI Divergence",
-      "\ud83d\udcc8 Uptrend: Higher Highs & Lows"
-    ],
-    "ma": {
-      "price": 33.26,
-      "ma50": 28.52,
-      "ma200": 32.01,
-      "ma_signal": "\u2705 Above 200MA"
-    },
-    "ad": {
-      "signal": "\u2705 Institutions accumulating"
-    },
-    "patterns": [
-      "\u26a0\ufe0f Bearish RSI Divergence",
       "\ud83d\udcc8 Uptrend: Higher Highs & Lows",
       "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
     ],
     "fundamentals": {},
-    "buy_rating": "WATCH",
-    "conviction": "LOW",
-    "news_signals": [],
-    "market": "US"
-  },
-  {
-    "ticker": "ROBT",
-    "name": "First Trust Nasdaq AI & Robotics",
-    "score": 4,
-    "max": 12,
-    "signals": [
-      "\u2705 Above 200MA",
-      "A/D rising \u2014 institutions loading",
-      "\ud83d\ude80 Testing Resistance: $60.44",
-      "\u26a0\ufe0f Bearish RSI Divergence"
-    ],
-    "ma": {
-      "price": 59.38,
-      "ma50": 51.95,
-      "ma200": 52.19,
-      "ma_signal": "\u2705 Above 200MA"
-    },
-    "ad": {
-      "signal": "\u2705 Institutions accumulating"
-    },
-    "patterns": [
-      "\ud83d\ude80 Testing Resistance: $60.44",
-      "\u26a0\ufe0f Bearish RSI Divergence",
-      "\ud83d\udcc8 Uptrend: Higher Highs & Lows",
-      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
-    ],
-    "fundamentals": {},
-    "buy_rating": "WATCH",
-    "conviction": "LOW",
+    "buy_rating": "SKIP",
+    "conviction": "SKIP",
     "news_signals": [],
     "market": "US"
   }

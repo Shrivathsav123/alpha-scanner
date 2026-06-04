@@ -1,19 +1,5 @@
 [
   {
-    "title": "Market Update: MCK, AVGO",
-    "summary": "",
-    "link": "https://finance.yahoo.com/research/reports/ARGUS_47233_MarketUpdate_1780590686000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei",
-    "source": "Yahoo Finance",
-    "tickers": [
-      "AVGO"
-    ],
-    "impact": 0,
-    "bull": false,
-    "bear": false,
-    "time": "2026-06-04T17:39:29.038367",
-    "recent": true
-  },
-  {
     "title": "Nvidia, Meta and SLB rank among top companies in adopting AI, new study says",
     "summary": "The AI-Driven Enterprise Institute released new research that breaks down the degree to which S&amp;P 500 companies are adopting AI compared with their peers.",
     "link": "https://www.cnbc.com/2026/06/01/nvidia-meta-walmart-among-top-companies-adopting-ai.html",
@@ -25,7 +11,7 @@
     "impact": 0,
     "bull": false,
     "bear": false,
-    "time": "2026-06-04T17:39:28.101593",
+    "time": "2026-06-04T23:02:30.254584",
     "recent": false
   }
 ]

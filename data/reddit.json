@@ -1,59 +1,51 @@
 [
   {
     "ticker": "AVGO",
-    "mentions": 4,
-    "bull_pct": 57,
-    "bear_pct": 43,
-    "sentiment": "mixed",
-    "timestamp": "2026-06-04T17:39:31.403981"
+    "mentions": 6,
+    "bull_pct": 67,
+    "bear_pct": 33,
+    "sentiment": "bullish",
+    "timestamp": "2026-06-04T23:02:34.329487"
   },
   {
     "ticker": "QQQ",
     "mentions": 4,
-    "bull_pct": 25,
-    "bear_pct": 75,
-    "sentiment": "bearish",
-    "timestamp": "2026-06-04T17:39:31.403997"
-  },
-  {
-    "ticker": "NVDA",
-    "mentions": 3,
     "bull_pct": 60,
     "bear_pct": 40,
     "sentiment": "bullish",
-    "timestamp": "2026-06-04T17:39:31.404001"
+    "timestamp": "2026-06-04T23:02:34.329504"
   },
   {
-    "ticker": "TSLA",
+    "ticker": "AMD",
     "mentions": 2,
-    "bull_pct": 0,
-    "bear_pct": 100,
-    "sentiment": "bearish",
-    "timestamp": "2026-06-04T17:39:31.404003"
+    "bull_pct": 50,
+    "bear_pct": 50,
+    "sentiment": "mixed",
+    "timestamp": "2026-06-04T23:02:34.329507"
   },
   {
     "ticker": "SPY",
     "mentions": 2,
+    "bull_pct": 67,
+    "bear_pct": 33,
+    "sentiment": "bullish",
+    "timestamp": "2026-06-04T23:02:34.329509"
+  },
+  {
+    "ticker": "NVDA",
+    "mentions": 2,
+    "bull_pct": 67,
+    "bear_pct": 33,
+    "sentiment": "bullish",
+    "timestamp": "2026-06-04T23:02:34.329511"
+  },
+  {
+    "ticker": "TSLA",
+    "mentions": 1,
     "bull_pct": 0,
     "bear_pct": 100,
     "sentiment": "bearish",
-    "timestamp": "2026-06-04T17:39:31.404005"
-  },
-  {
-    "ticker": "ANET",
-    "mentions": 2,
-    "bull_pct": 100,
-    "bear_pct": 0,
-    "sentiment": "bullish",
-    "timestamp": "2026-06-04T17:39:31.404008"
-  },
-  {
-    "ticker": "TSM",
-    "mentions": 1,
-    "bull_pct": 55,
-    "bear_pct": 45,
-    "sentiment": "mixed",
-    "timestamp": "2026-06-04T17:39:31.404010"
+    "timestamp": "2026-06-04T23:02:34.329513"
   },
   {
     "ticker": "SMCI",
@@ -61,7 +53,7 @@
     "bull_pct": 100,
     "bear_pct": 0,
     "sentiment": "bullish",
-    "timestamp": "2026-06-04T17:39:31.404017"
+    "timestamp": "2026-06-04T23:02:34.329515"
   },
   {
     "ticker": "AMAT",
@@ -69,7 +61,15 @@
     "bull_pct": 100,
     "bear_pct": 0,
     "sentiment": "bullish",
-    "timestamp": "2026-06-04T17:39:31.404019"
+    "timestamp": "2026-06-04T23:02:34.329521"
+  },
+  {
+    "ticker": "ANET",
+    "mentions": 1,
+    "bull_pct": 100,
+    "bear_pct": 0,
+    "sentiment": "bullish",
+    "timestamp": "2026-06-04T23:02:34.329523"
   },
   {
     "ticker": "ASML",
@@ -77,70 +77,22 @@
     "bull_pct": 100,
     "bear_pct": 0,
     "sentiment": "bullish",
-    "timestamp": "2026-06-04T17:39:31.404022"
+    "timestamp": "2026-06-04T23:02:34.329526"
   },
   {
-    "ticker": "META",
+    "ticker": "AAPL",
     "mentions": 1,
-    "bull_pct": 55,
-    "bear_pct": 45,
-    "sentiment": "mixed",
-    "timestamp": "2026-06-04T17:39:31.404024"
+    "bull_pct": 100,
+    "bear_pct": 0,
+    "sentiment": "bullish",
+    "timestamp": "2026-06-04T23:02:34.329527"
   },
   {
-    "ticker": "AMD",
+    "ticker": "ARM",
     "mentions": 1,
     "bull_pct": 0,
     "bear_pct": 100,
     "sentiment": "bearish",
-    "timestamp": "2026-06-04T17:39:31.404026"
-  },
-  {
-    "ticker": "GOOGL",
-    "mentions": 1,
-    "bull_pct": 50,
-    "bear_pct": 50,
-    "sentiment": "mixed",
-    "timestamp": "2026-06-04T17:39:31.404029"
-  },
-  {
-    "ticker": "MU",
-    "mentions": 1,
-    "bull_pct": 50,
-    "bear_pct": 50,
-    "sentiment": "mixed",
-    "timestamp": "2026-06-04T17:39:31.404031"
-  },
-  {
-    "ticker": "SNDK",
-    "mentions": 1,
-    "bull_pct": 50,
-    "bear_pct": 50,
-    "sentiment": "mixed",
-    "timestamp": "2026-06-04T17:39:31.404033"
-  },
-  {
-    "ticker": "ASTS",
-    "mentions": 1,
-    "bull_pct": 55,
-    "bear_pct": 45,
-    "sentiment": "mixed",
-    "timestamp": "2026-06-04T17:39:31.404035"
-  },
-  {
-    "ticker": "AMZN",
-    "mentions": 1,
-    "bull_pct": 100,
-    "bear_pct": 0,
-    "sentiment": "bullish",
-    "timestamp": "2026-06-04T17:39:31.404036"
-  },
-  {
-    "ticker": "VST",
-    "mentions": 1,
-    "bull_pct": 100,
-    "bear_pct": 0,
-    "sentiment": "bullish",
-    "timestamp": "2026-06-04T17:39:31.404038"
+    "timestamp": "2026-06-04T23:02:34.329529"
   }
 ]
