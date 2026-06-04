@@ -102,10 +102,15 @@ SECTOR_ETFS = {
     "FBTC": "Fidelity Wise Origin Bitcoin",
     "GBTC": "Grayscale Bitcoin Trust",
 
-    # Bonds/Rates (inverse trades)
-    "TLT":  "iShares 20+ Year Treasury Bond",
-    "TBT":  "ProShares UltraShort 20+ Year",
+    # Bonds/Rates
+    "TLT":  "iShares 20+ Year Treasury Bond ETF",
+    "EDV":  "Vanguard Extended Duration Treasury ETF",
+    "IEF":  "iShares 7-10 Year Treasury Bond ETF",
+    "SHY":  "iShares 1-3 Year Treasury Bond ETF",
+    "TBT":  "ProShares UltraShort 20+ Year Treasury",
     "HYG":  "iShares iBoxx High Yield Corp Bond",
+    "IEV":  "iShares Europe ETF",
+    "AGG":  "iShares Core US Aggregate Bond ETF",
 }
 
 # ── US STOCKS BY SECTOR ───────────────────────────────────────
@@ -406,40 +411,94 @@ STOCK_TO_ETF = {
 
 # All tickers combined for US scan
 ALL_US = {**US_STOCKS, **SECTOR_ETFS}
-# ── BOTTLENECK STOCKS ─────────────────────────────────────────
-BOTTLENECK_STOCKS = {
-    "LITE":  "Lumentum Holdings (photonics)",
-    "COHR":  "Coherent Corp (optical)",
-    "MTSI":  "MACOM Technology (RF + optical)",
-    "FN":    "Fabrinet (optical manufacturing)",
-    "VIAV":  "VIAVI Solutions (optical testing)",
-    "AMAT":  "Applied Materials (chip packaging)",
-    "LRCX":  "Lam Research (etch equipment)",
-    "KLAC":  "KLA Corporation (inspection)",
-    "ONTO":  "Onto Innovation (packaging inspection)",
-    "VICR":  "Vicor Corp (AI power components)",
-    "MPWR":  "Monolithic Power Systems",
-    "VRT":   "Vertiv Holdings (data centre cooling)",
-    "MOD":   "Modine Manufacturing (thermal)",
-    "ETN":   "Eaton Corp (power management)",
-    "POWL":  "Powell Industries (transformers)",
-    "CEG":   "Constellation Energy (nuclear)",
-    "VST":   "Vistra Corp (power generation)",
-    "FCX":   "Freeport-McMoRan (copper)",
-    "SCCO":  "Southern Copper Corp",
-    "APD":   "Air Products (specialty gases)",
-    "LIN":   "Linde PLC (industrial gases)",
-    "ANET":  "Arista Networks (AI networking)",
-    "MRVL":  "Marvell Technology (networking)",
-    "APH":   "Amphenol (connectors)",
-    "TTMI":  "TTM Technologies (PCBs)",
-    "CDNS":  "Cadence Design Systems (EDA)",
-    "SNPS":  "Synopsys (chip design)",
-    "SMCI":  "Super Micro Computer (AI servers)",
-    "CCJ":   "Cameco Corp (uranium)",
-    "KTOS":  "Kratos Defense (AI drones)",
-    "INFN":  "Infinera Corp (optical networking)",
-    "CIEN":  "Ciena Corp (optical equipment)",
-    "ACMR":  "ACM Research (cleaning equipment)",
-}
 
+# ── BOTTLENECK STOCKS ─────────────────────────────────────────
+# These are the picks-and-shovels plays — companies that supply
+# critical components to the AI/tech mega-trend.
+# When chips run, these run HARDER because they're capacity constraints.
+
+BOTTLENECK_STOCKS = {
+
+    # ── Photonics & Optical Interconnects ─────────────────────
+    # Data moves between chips at the speed of light — these make that happen
+    "LITE":  "Lumentum Holdings (lasers for AI data centres)",
+    "COHR":  "Coherent Corp (optical transceivers + components)",
+    "MTSI":  "MACOM Technology (RF + optical semiconductors)",
+    "FN":    "Fabrinet (manufactures for Lumentum, Coherent)",
+    "VIAV":  "VIAVI Solutions (optical network testing)",
+    "IPAR":  "InterPlex (precision photonic components)",
+
+    # ── Advanced Packaging ────────────────────────────────────
+    # NVDA's H100/H200 uses CoWoS packaging — massive bottleneck
+    "AMAT":  "Applied Materials (deposition + packaging equipment)",
+    "LRCX":  "Lam Research (etch equipment for advanced packaging)",
+    "KLAC":  "KLA Corporation (inspection + metrology)",
+    "ONTO":  "Onto Innovation (advanced packaging inspection)",
+    "ACMR":  "ACM Research (cleaning equipment for advanced nodes)",
+
+    # ── Power Management & VRMs ───────────────────────────────
+    # Every AI chip needs ultra-precise power delivery
+    "VICR":  "Vicor Corp (power components for AI servers)",
+    "MPWR":  "Monolithic Power Systems (power ICs for data centres)",
+    "IREN":  "Iris Energy (AI power infrastructure)",
+    "SMCI":  "Super Micro Computer (AI server systems)",
+
+    # ── Liquid Cooling & Thermal ──────────────────────────────
+    # AI chips generate enormous heat — cooling is a hard constraint
+    "VRT":   "Vertiv Holdings (data centre cooling + power)",
+    "MOD":   "Modine Manufacturing (thermal management)",
+    "CARR":  "Carrier Global (HVAC + cooling systems)",
+    "CIBR":  "Comfort Systems USA (data centre mechanical)",
+
+    # ── Data Centre Power & Grid ──────────────────────────────
+    # AI data centres need 10-100x more power than normal ones
+    "ETN":   "Eaton Corp (power management for data centres)",
+    "POWL":  "Powell Industries (switchgear + transformers)",
+    "CEG":   "Constellation Energy (nuclear power for data centres)",
+    "VST":   "Vistra Corp (power generation for AI)",
+    "NRG":   "NRG Energy (power supply to hyperscalers)",
+
+    # ── Copper & Raw Materials ────────────────────────────────
+    # AI data centres use enormous amounts of copper for wiring
+    "FCX":   "Freeport-McMoRan (largest US copper producer)",
+    "SCCO":  "Southern Copper Corp",
+    "COPX":  "Global X Copper Miners ETF",
+
+    # ── Networking & Interconnects ────────────────────────────
+    # Moving data between thousands of GPUs requires fast networking
+    "ANET":  "Arista Networks (AI data centre networking)",
+    "MRVL":  "Marvell Technology (custom AI chips + networking)",
+    "INFN":  "Infinera Corp (optical networking)",
+    "CIEN":  "Ciena Corp (optical networking equipment)",
+    "APH":   "Amphenol (connectors for data centres)",
+
+    # ── PCBs & Substrates ─────────────────────────────────────
+    # The boards that everything sits on
+    "TTMI":  "TTM Technologies (printed circuit boards)",
+    "BHE":   "Benchmark Electronics (EMS for AI hardware)",
+
+    # ── Specialty Chemicals & Gases ───────────────────────────
+    # Chip fabs need ultra-pure gases and chemicals
+    "APD":   "Air Products (specialty gases for chip fabs)",
+    "LIN":   "Linde PLC (industrial gases for semiconductors)",
+    "CMC":   "CMC Materials (CMP slurries for chip polishing)",
+
+    # ── HBM Memory (direct NVDA bottleneck) ───────────────────
+    "MU":    "Micron Technology (HBM3e for NVDA H200)",
+    "WDC":   "Western Digital (NAND for AI storage)",
+
+    # ── Nuclear / Uranium (AI power demand) ───────────────────
+    "CCJ":   "Cameco Corp (uranium — nuclear for AI power)",
+    "UUUU":  "Energy Fuels (uranium mining)",
+    "LEU":   "Centrus Energy (uranium enrichment)",
+
+    # ── EDA & Design Software ─────────────────────────────────
+    # Every chip starts as software design — these are monopolies
+    "CDNS":  "Cadence Design Systems (chip design EDA)",
+    "SNPS":  "Synopsys (chip design + verification)",
+
+    # ── Defence AI bottlenecks ────────────────────────────────
+    "KTOS":  "Kratos Defense (autonomous systems + AI drones)",
+    "RKLB":  "Rocket Lab (launch vehicles for AI satellites)",
+    "ACHR":  "Archer Aviation (autonomous air mobility)",
+}
