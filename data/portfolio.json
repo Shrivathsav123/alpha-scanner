@@ -1,6 +1,6 @@
 {
   "balance": 183000.0,
-  "cash": 40979.76,
+  "cash": 58777.11,
   "positions": {
     "ANET": {
       "ticker": "ANET",
@@ -33,22 +33,6 @@
       "score": 5,
       "reasoning": "EDA monopoly with literal pricing power - every chip starts as software design. Golden Cross + above 200MA + uptrend intact. This is the ultimate bottleneck as AI chip demand explodes.",
       "entry_date": "2026-06-03T14:49:01.795996"
-    },
-    "MRVL": {
-      "ticker": "MRVL",
-      "name": "Marvell Technology",
-      "shares": 59,
-      "entry_price": 305.52,
-      "current_price": 301.65,
-      "cost": 18025.68,
-      "value": 17797.35,
-      "pnl": -228.33,
-      "pnl_pct": -1.27,
-      "stop_loss": 284.13,
-      "trade_type": "swing",
-      "score": 4,
-      "reasoning": "Perfect bottleneck play with BREAKOUT confirmation on volume - this is institutional buying. MRVL supplies custom chips for AI data centers while NVDA/AMD already ran. Golden Cross + above 200MA creates low-risk entry on momentum continuation.",
-      "entry_date": "2026-06-03T16:03:44.846727"
     },
     "LRCX": {
       "ticker": "LRCX",
@@ -135,8 +119,8 @@
   "pnl": -180.09,
   "pnl_pct": -0.1,
   "created": "2026-06-03T14:12:02.173045",
-  "updated": "2026-06-04T12:00:58.932441",
-  "trades_count": 16,
+  "updated": "2026-06-04T12:06:24.987210",
+  "trades_count": 17,
   "wins": 0,
-  "losses": 4
+  "losses": 5
 }

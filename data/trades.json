@@ -1,5 +1,18 @@
 [
   {
+    "type": "SELL",
+    "ticker": "MRVL",
+    "name": "Marvell Technology",
+    "shares": 59,
+    "entry_price": 305.52,
+    "sell_price": 301.65,
+    "pnl": -228.33,
+    "pnl_pct": -1.27,
+    "reason": "Down -1.27% and failed to hold breakout momentum. The volume spike didn't sustain and we're seeing weakness. Better to cut loss and redeploy into stronger bottleneck setups that are just starting their moves.",
+    "trade_type": "swing",
+    "date": "2026-06-04T12:06:24.009416"
+  },
+  {
     "type": "BUY",
     "ticker": "MU",
     "name": "Micron Technology",
