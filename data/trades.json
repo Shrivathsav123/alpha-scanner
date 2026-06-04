@@ -1,5 +1,44 @@
 [
   {
+    "type": "SELL",
+    "ticker": "MRVL",
+    "name": "Marvell Technology",
+    "shares": 60,
+    "entry_price": 301.65,
+    "sell_price": 283.21,
+    "pnl": -1106.4,
+    "pnl_pct": -6.11,
+    "reason": "Position is down -6.11%, approaching hard stop and already a repeat loser. The 'redemption breakout' thesis failed again \u2014 A/D and Golden Cross signals didn't translate to follow-through. Cut it before it hits -7% and redeploy capital. Stop discipline over hope.",
+    "trade_type": "swing",
+    "date": "2026-06-04T13:56:31.761943"
+  },
+  {
+    "type": "SELL",
+    "ticker": "MU",
+    "name": "Micron Technology",
+    "shares": 16,
+    "entry_price": 1079.57,
+    "sell_price": 988.34,
+    "pnl": -1459.68,
+    "pnl_pct": -8.45,
+    "reason": "STOP LOSS triggered at $988.34",
+    "trade_type": "swing",
+    "date": "2026-06-04T13:56:26.780983"
+  },
+  {
+    "type": "SELL",
+    "ticker": "ANET",
+    "name": "Arista Networks",
+    "shares": 105,
+    "entry_price": 173.42,
+    "sell_price": 157.7,
+    "pnl": -1650.6,
+    "pnl_pct": -9.06,
+    "reason": "STOP LOSS triggered at $157.7",
+    "trade_type": "swing",
+    "date": "2026-06-04T13:56:26.780398"
+  },
+  {
     "type": "BUY",
     "ticker": "MRVL",
     "name": "Marvell Technology",
