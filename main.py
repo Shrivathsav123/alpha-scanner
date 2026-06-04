@@ -196,6 +196,15 @@ def main():
     if count % 4 == 0 or len(qualifying) >= 5:
         send(format_scan_summary(results[:30], macro))
 
+    # Run global news scan — fetch from CNBC, Reuters, MarketWatch etc
+    try:
+        from src.news import scan_global_news, save_news_feed
+        print("[News] Scanning CNBC, Reuters, MarketWatch, Yahoo Finance...")
+        all_news = scan_global_news()
+        save_news_feed(all_news)
+    except Exception as e:
+        print(f"[News] Global scan error: {e}")
+
     # Save live prices for app
     try:
         price_data = {}
