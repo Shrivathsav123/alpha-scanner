@@ -37,7 +37,7 @@
       "QQQ",
       "SOXL"
     ],
-    "savedAt": "2026-06-04T06:37:16.247993"
+    "savedAt": "2026-06-04T10:32:02.601675"
   },
   {
     "ticker": "AVGO",
@@ -72,7 +72,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248003"
+    "savedAt": "2026-06-04T10:32:02.601684"
   },
   {
     "ticker": "MU",
@@ -110,7 +110,7 @@
       "SMH",
       "SOXX"
     ],
-    "savedAt": "2026-06-04T06:37:16.248007"
+    "savedAt": "2026-06-04T10:32:02.601689"
   },
   {
     "ticker": "SNDK",
@@ -146,7 +146,7 @@
     "related_etfs": [
       "SMH"
     ],
-    "savedAt": "2026-06-04T06:37:16.248010"
+    "savedAt": "2026-06-04T10:32:02.601692"
   },
   {
     "ticker": "AMAT",
@@ -181,7 +181,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248013"
+    "savedAt": "2026-06-04T10:32:02.601694"
   },
   {
     "ticker": "LRCX",
@@ -216,7 +216,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248015"
+    "savedAt": "2026-06-04T10:32:02.601697"
   },
   {
     "ticker": "KLAC",
@@ -251,7 +251,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248018"
+    "savedAt": "2026-06-04T10:32:02.601700"
   },
   {
     "ticker": "ASML",
@@ -286,7 +286,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248022"
+    "savedAt": "2026-06-04T10:32:02.601703"
   },
   {
     "ticker": "ARM",
@@ -320,7 +320,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248025"
+    "savedAt": "2026-06-04T10:32:02.601706"
   },
   {
     "ticker": "MRVL",
@@ -356,7 +356,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248027"
+    "savedAt": "2026-06-04T10:32:02.601709"
   },
   {
     "ticker": "GOOGL",
@@ -391,7 +391,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248030"
+    "savedAt": "2026-06-04T10:32:02.601712"
   },
   {
     "ticker": "AMZN",
@@ -426,7 +426,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248033"
+    "savedAt": "2026-06-04T10:32:02.601714"
   },
   {
     "ticker": "SMH",
@@ -461,7 +461,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248037"
+    "savedAt": "2026-06-04T10:32:02.601718"
   },
   {
     "ticker": "SOXX",
@@ -496,7 +496,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248039"
+    "savedAt": "2026-06-04T10:32:02.601720"
   },
   {
     "ticker": "XLK",
@@ -531,7 +531,7 @@
     "news_signals": [],
     "market": "US",
     "related_etfs": [],
-    "savedAt": "2026-06-04T06:37:16.248042"
+    "savedAt": "2026-06-04T10:32:02.601723"
   },
   {
     "ticker": "QCOM",
@@ -563,7 +563,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248044"
+    "savedAt": "2026-06-04T10:32:02.601725"
   },
   {
     "ticker": "TSM",
@@ -596,7 +596,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248047"
+    "savedAt": "2026-06-04T10:32:02.601727"
   },
   {
     "ticker": "PLTR",
@@ -629,7 +629,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248049"
+    "savedAt": "2026-06-04T10:32:02.601730"
   },
   {
     "ticker": "NFLX",
@@ -660,7 +660,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248052"
+    "savedAt": "2026-06-04T10:32:02.601732"
   },
   {
     "ticker": "CRM",
@@ -692,7 +692,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248054"
+    "savedAt": "2026-06-04T10:32:02.601734"
   },
   {
     "ticker": "NOW",
@@ -725,7 +725,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248056"
+    "savedAt": "2026-06-04T10:32:02.601736"
   },
   {
     "ticker": "ARKK",
@@ -755,7 +755,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248059"
+    "savedAt": "2026-06-04T10:32:02.601739"
   },
   {
     "ticker": "ARKQ",
@@ -786,7 +786,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248063"
+    "savedAt": "2026-06-04T10:32:02.601743"
   },
   {
     "ticker": "NVDA",
@@ -816,7 +816,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248065"
+    "savedAt": "2026-06-04T10:32:02.601745"
   },
   {
     "ticker": "INTC",
@@ -846,7 +846,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248068"
+    "savedAt": "2026-06-04T10:32:02.601748"
   },
   {
     "ticker": "SMCI",
@@ -877,7 +877,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248070"
+    "savedAt": "2026-06-04T10:32:02.601750"
   },
   {
     "ticker": "MSFT",
@@ -909,7 +909,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248072"
+    "savedAt": "2026-06-04T10:32:02.601752"
   },
   {
     "ticker": "META",
@@ -941,7 +941,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248075"
+    "savedAt": "2026-06-04T10:32:02.601754"
   },
   {
     "ticker": "TSLA",
@@ -971,7 +971,7 @@
     "conviction": "LOW",
     "news_signals": [],
     "market": "US",
-    "savedAt": "2026-06-04T06:37:16.248077"
+    "savedAt": "2026-06-04T10:32:02.601757"
   },
   {
     "ticker": "SMH",
