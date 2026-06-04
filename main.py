@@ -211,6 +211,23 @@ def main():
     except Exception as e:
         print(f"[Scanner] Price save error: {e}")
 
+    # Run Reddit scan every run
+    if run_reddit_scan:
+        try:
+            print("[Reddit Scanner] Scanning WSB...")
+            run_reddit_scan()
+        except Exception as e:
+            print(f"[Reddit Scanner] Error: {e}")
+
+    # Run NSE scan every other run
+    if count % 2 == 0 and run_nse_scan:
+        try:
+            print("[NSE Scanner] Starting Indian market scan...")
+            nse_results = run_nse_scan(send_telegram=send)
+            print(f"[NSE Scanner] Done. {len(nse_results)} stocks scanned.")
+        except Exception as e:
+            print(f"[NSE Scanner] Error: {e}")
+
     print(f"[Scanner] Done. {alerts_sent} alerts sent.")
 
 
