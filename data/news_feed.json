@@ -1,7 +1,7 @@
 [
   {
     "title": "Meta's stock sinks on report company could raise tens of billions of dollars to fund AI push",
-    "summary": "Meta shares dropped after the Financial Times reported that company could potentially raise tens of billions of dollars in a stock offering to help its AI push.",
+    "summary": "Meta shares dropped after the Financial Times reported the company could potentially raise tens of billions of dollars in a stock offering to help its AI push.",
     "link": "https://www.cnbc.com/2026/06/05/meta-stock-sinks-on-report-company-could-raise-tens-of-billions-for-ai.html",
     "source": "CNBC",
     "tickers": [
@@ -10,7 +10,21 @@
     "impact": 0,
     "bull": false,
     "bear": false,
-    "time": "2026-06-05T19:28:37.131357",
+    "time": "2026-06-05T22:52:34.225837",
+    "recent": true
+  },
+  {
+    "title": "First Google, now Meta? Big Tech may increasingly sell stock to bankroll $820 billion AI boom.",
+    "summary": "Stock investors may not love it \u2014 but bond investors already heavily engaged in funding the AI buildout are pleased.",
+    "link": "https://www.marketwatch.com/story/first-google-then-meta-big-tech-may-increasingly-sell-stock-to-bankroll-820-billion-ai-boom-83c69030?mod=mw_rss_topstories",
+    "source": "MarketWatch",
+    "tickers": [
+      "META"
+    ],
+    "impact": 0,
+    "bull": false,
+    "bear": false,
+    "time": "2026-06-05T22:52:34.992687",
     "recent": true
   },
   {
@@ -25,21 +39,35 @@
     "impact": 0,
     "bull": false,
     "bear": false,
-    "time": "2026-06-05T19:28:37.207612",
+    "time": "2026-06-05T22:52:34.336865",
     "recent": false
   },
   {
-    "title": "How Is SLB N.V.'s Stock Performance Compared to Other Energy Stocks",
+    "title": "As AI Semiconductor Revenue Swells, AVGO Stock is Destined to Trend Higher",
     "summary": "",
-    "link": "https://finance.yahoo.com/markets/stocks/articles/slb-n-v-stock-performance-091624379.html",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/ai-semiconductor-revenue-swells-avgo-152836280.html",
     "source": "Yahoo Finance",
     "tickers": [
-      "SLB"
+      "AVGO"
     ],
     "impact": 0,
     "bull": false,
     "bear": false,
-    "time": "2026-06-05T19:28:38.340831",
+    "time": "2026-06-05T22:52:35.168683",
+    "recent": false
+  },
+  {
+    "title": "Broadcom Stock Drops After Earnings. Buy the AVGO Dip.",
+    "summary": "",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/broadcom-stock-drops-earnings-buy-154344959.html",
+    "source": "Yahoo Finance",
+    "tickers": [
+      "AVGO"
+    ],
+    "impact": 0,
+    "bull": false,
+    "bear": false,
+    "time": "2026-06-05T22:52:35.170796",
     "recent": false
   }
 ]
