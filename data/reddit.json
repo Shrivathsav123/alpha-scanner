@@ -1,34 +1,106 @@
 [
   {
-    "ticker": "SPY",
-    "mentions": 6,
-    "bull_pct": 75,
-    "bear_pct": 25,
-    "sentiment": "bullish",
-    "timestamp": "2026-06-05T22:52:38.810062"
+    "ticker": "META",
+    "mentions": 5,
+    "bull_pct": 50,
+    "bear_pct": 50,
+    "sentiment": "mixed",
+    "timestamp": "2026-06-06T13:13:11.159786"
+  },
+  {
+    "ticker": "AVGO",
+    "mentions": 3,
+    "bull_pct": 50,
+    "bear_pct": 50,
+    "sentiment": "mixed",
+    "timestamp": "2026-06-06T13:13:11.159801"
   },
   {
     "ticker": "QQQ",
     "mentions": 3,
-    "bull_pct": 67,
-    "bear_pct": 33,
+    "bull_pct": 60,
+    "bear_pct": 40,
     "sentiment": "bullish",
-    "timestamp": "2026-06-05T22:52:38.810076"
+    "timestamp": "2026-06-06T13:13:11.159804"
   },
   {
-    "ticker": "META",
+    "ticker": "NVDA",
+    "mentions": 3,
+    "bull_pct": 60,
+    "bear_pct": 40,
+    "sentiment": "bullish",
+    "timestamp": "2026-06-06T13:13:11.159806"
+  },
+  {
+    "ticker": "AMZN",
     "mentions": 2,
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-05T22:52:38.810079"
+    "timestamp": "2026-06-06T13:13:11.159808"
   },
   {
-    "ticker": "AVGO",
+    "ticker": "SPY",
+    "mentions": 2,
+    "bull_pct": 100,
+    "bear_pct": 0,
+    "sentiment": "bullish",
+    "timestamp": "2026-06-06T13:13:11.159811"
+  },
+  {
+    "ticker": "MU",
+    "mentions": 1,
+    "bull_pct": 55,
+    "bear_pct": 45,
+    "sentiment": "mixed",
+    "timestamp": "2026-06-06T13:13:11.159814"
+  },
+  {
+    "ticker": "COIN",
     "mentions": 1,
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-05T22:52:38.810081"
+    "timestamp": "2026-06-06T13:13:11.159821"
+  },
+  {
+    "ticker": "AMD",
+    "mentions": 1,
+    "bull_pct": 55,
+    "bear_pct": 45,
+    "sentiment": "mixed",
+    "timestamp": "2026-06-06T13:13:11.159824"
+  },
+  {
+    "ticker": "ARM",
+    "mentions": 1,
+    "bull_pct": 0,
+    "bear_pct": 100,
+    "sentiment": "bearish",
+    "timestamp": "2026-06-06T13:13:11.159826"
+  },
+  {
+    "ticker": "SMCI",
+    "mentions": 1,
+    "bull_pct": 50,
+    "bear_pct": 50,
+    "sentiment": "mixed",
+    "timestamp": "2026-06-06T13:13:11.159828"
+  },
+  {
+    "ticker": "SMH",
+    "mentions": 1,
+    "bull_pct": 50,
+    "bear_pct": 50,
+    "sentiment": "mixed",
+    "timestamp": "2026-06-06T13:13:11.159830"
+  },
+  {
+    "ticker": "GME",
+    "mentions": 1,
+    "bull_pct": 50,
+    "bear_pct": 50,
+    "sentiment": "mixed",
+    "timestamp": "2026-06-06T13:13:11.159832"
   }
 ]
