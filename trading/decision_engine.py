@@ -1,332 +1,293 @@
-# trading/decision_engine.py
-# ALPHA — World-class autonomous trading AI
+# trading/decision_engine.py — ALPHA Quant AI with memory, macro prediction, probabilistic entry
 
 import json
 import requests
 import os
 import re
 from datetime import datetime
+from memory import get_memory_context, record_lesson
+from macro_calendar import get_macro_risk_score, get_upcoming_events_risk
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
-# ── Derived demand map ──────────────────────────────────────────
-DERIVED_DEMAND = {
-    "NVDA": ["LITE", "COHR", "VRT", "AMAT", "VICR", "MPWR", "CDNS"],
-    "AMD":  ["AMAT", "LRCX", "KLAC", "VRT", "MPWR"],
-    "MSFT": ["ANET", "VRT", "ETN", "CDNS"],
-    "GOOGL":["ANET", "VRT", "APD", "LIN", "COHR"],
-    "AMZN": ["ANET", "VRT", "ETN", "APH", "COHR"],
-    "META": ["ANET", "COHR", "VRT", "LITE"],
-    "TSLA": ["VICR", "MPWR", "FCX", "SCCO"],
-    "TSM":  ["AMAT", "LRCX", "KLAC", "APD", "LIN"],
-    "MU":   ["AMAT", "LRCX", "KLAC", "ONTO"],
-    "AVGO": ["COHR", "LITE", "APH", "TTMI"],
-    "SMH":  ["LITE", "COHR", "VRT", "AMAT", "LRCX", "VICR"],
-}
-
-BOTTLENECK_TICKERS = {
-    "LITE","COHR","MTSI","FN","VIAV","INFN","CIEN",
-    "AMAT","LRCX","KLAC","ONTO","ACMR",
-    "VICR","MPWR","VRT","MOD","ETN","POWL",
-    "CEG","VST","FCX","SCCO","APD","LIN",
-    "ANET","MRVL","APH","TTMI",
-    "CDNS","SNPS","SMCI","CCJ","KTOS",
-}
-
 SECTOR_UNIVERSE = {
     "AI_BOTTLENECK":  ["LITE","COHR","VRT","AMAT","LRCX","KLAC","VICR","MPWR","CDNS","SNPS","ANET","SMCI"],
-    "BIOTECH":        ["MRNA","BNTX","REGN","VRTX","BIIB","GILD","AMGN","INCY","BMRN","ALNY","SGEN","EXAS"],
-    "PHARMA":         ["LLY","NVO","PFE","JNJ","ABT","BMY","MRK","ABBV","ZTS","DXCM"],
-    "OIL_GAS":        ["XOM","CVX","COP","EOG","PXD","MPC","VLO","PSX","HAL","SLB","OXY"],
-    "ENERGY_INFRA":   ["CEG","VST","NRG","NEE","AES","ETN","POWL","FSLR","ENPH","RUN"],
-    "DEFENCE":        ["LMT","RTX","NOC","GD","BA","HII","KTOS","RKLB","ACHR","AXON"],
-    "MATERIALS":      ["FCX","SCCO","NEM","GOLD","AA","CLF","MP","APD","LIN","ECL"],
-    "FINANCIALS":     ["JPM","GS","MS","BAC","BLK","V","MA","AXP","SCHW","CME"],
-    "CONSUMER":       ["AMZN","TSLA","NKE","SBUX","MCD","YUM","COST","TGT","HD","LOW"],
-    "HEALTHCARE":     ["UNH","CVS","HUM","CI","ELV","HCA","DGX","LH","ISRG","BSX"],
+    "BIOTECH":        ["MRNA","BNTX","REGN","VRTX","BIIB","GILD","AMGN","INCY","BMRN","ALNY"],
+    "PHARMA":         ["LLY","NVO","PFE","JNJ","ABT","BMY","MRK","ABBV"],
+    "OIL_GAS":        ["XOM","CVX","COP","EOG","MPC","VLO","HAL","SLB","OXY"],
+    "ENERGY_INFRA":   ["CEG","VST","NRG","NEE","FSLR","ENPH","ETN","POWL"],
+    "DEFENCE":        ["LMT","RTX","NOC","GD","BA","HII","KTOS","RKLB"],
+    "MATERIALS":      ["FCX","SCCO","NEM","GOLD","AA","MP","APD","LIN"],
+    "FINANCIALS":     ["JPM","GS","MS","BAC","BLK","V","MA","AXP","SCHW"],
+    "HEALTHCARE":     ["UNH","CVS","HUM","CI","HCA","ISRG","BSX","DGX"],
+    "CONSUMER":       ["AMZN","TSLA","NKE","SBUX","MCD","COST","HD","LOW"],
+    "TELECOM_AI":     ["NOK","ERIC","INFN","CIEN","VIAV"],
 }
 
-TRADER_SYSTEM_PROMPT = """You are ALPHA — the world's most sophisticated autonomous trading AI. You combine quantitative precision with macro intuition across ALL market sectors.
+QUANT_SYSTEM_PROMPT = """You are ALPHA — an elite quantitative trading AI combining macro economics, probabilistic analysis, and deep market memory.
+
+Your edge is NOT chart patterns alone. Your edge is the MARRIAGE of:
+1. Macro regime identification (rates, credit, dollar, VIX)
+2. Probability-weighted entry based on quantitative signals
+3. News and catalyst analysis (jobs report, FOMC, earnings, geopolitics)
+4. Memory of past mistakes — you NEVER repeat the same error
+5. Technical patterns as CONFIRMATION only, never as the primary reason
 
 ═══════════════════════════════════════════
-UNIVERSE — YOU TRADE EVERYTHING
+MACRO-FIRST FRAMEWORK
 ═══════════════════════════════════════════
-You are not limited to AI/tech. You find alpha across:
+Before ANY trade, answer these three questions:
+1. What is the rate environment? (Rising rates = headwind for growth/tech)
+2. What is the credit environment? (HYG falling = risk-off, avoid)
+3. What is the dollar doing? (DXY rising = headwind for growth)
 
-AI & BOTTLENECKS: LITE, COHR, VRT, AMAT, LRCX, KLAC, VICR, MPWR, CDNS, ANET
-BIOTECH & PHARMA: MRNA, BNTX, REGN, VRTX, LLY, NVO, GILD, AMGN — outbreak catalysts, FDA approvals, clinical trial results
-OIL & GAS: XOM, CVX, COP, OXY, HAL, SLB — geopolitical supply shocks, OPEC decisions, energy crisis plays
-ENERGY INFRA: CEG, VST, NEE, FSLR, ENPH — nuclear renaissance, solar buildout, AI power demand
-DEFENCE: LMT, RTX, NOC, KTOS, RKLB — government contracts, geopolitical escalation, space economy
-MATERIALS: FCX, SCCO, NEM, MP — copper supercycle, gold safe haven, rare earth monopolies
-FINANCIALS: JPM, GS, V, MA — rate environment plays, credit cycle, fintech disruption
-HEALTHCARE: UNH, ISRG, DXCM — aging demographics, robotic surgery, continuous monitoring
+RATE HIKE PROBABILITY MODEL:
+- Strong jobs report (NFP > 200k) = 40% probability of rate hike repricing → REDUCE tech exposure
+- Hot CPI (>3.5%) = 60% rate hike probability → SHORT duration, favour energy/financials
+- Weak jobs + falling CPI = rate cut probability → ADD growth/tech
+- Fed hawkish language = 50% probability market sells off → trim positions
+- Fed dovish pivot = 70% probability tech rallies → ADD growth
 
-═══════════════════════════════════════════
-SECTOR ROTATION FRAMEWORK
-═══════════════════════════════════════════
-Different sectors outperform in different macro regimes:
+SECTOR ROTATION BY MACRO REGIME:
+Rising rates + strong jobs:
+→ FAVOUR: Energy (XOM, CVX), Financials (JPM, GS), Healthcare (UNH)
+→ AVOID: High-multiple tech, growth, semis
 
-BULL MARKET + LOW VIX + FALLING DXY:
-→ AI bottlenecks, biotech, growth tech, materials
+Falling rates + weak dollar:
+→ FAVOUR: AI semis (AMAT, NVDA, CDNS), Biotech (MRNA, REGN), Growth
+→ AVOID: Banks, energy, commodities
 
-RISING RATES + STRONG DOLLAR:
-→ Financials (JPM, GS, V), energy (XOM, CVX), healthcare defensives
+Geopolitical risk + oil spike:
+→ FAVOUR: Defence (LMT, RTX), Domestic energy (CEG, VST), Gold (NEM)
+→ AVOID: Airlines, consumer discretionary, emerging markets
 
-GEOPOLITICAL RISK + OIL SPIKE:
-→ Defence (LMT, RTX, NOC), domestic energy (CEG, VST), gold (NEM, GOLD)
-
-OUTBREAK/PANDEMIC FEAR:
-→ mRNA biotech (MRNA, BNTX), pharma (REGN, VRTX), diagnostics (DGX, LH)
-
-RECESSION FEAR + VIX SPIKE:
-→ Healthcare (UNH, JNJ), consumer staples, gold, short duration bonds
-
-FDA CATALYST WEEK:
-→ PDUFA dates are known in advance — position 2-3 weeks before approval decision
-
-EARNINGS SEASON:
-→ Buy strong guidance raisers, sell earnings misses immediately
+FDA/Biotech catalyst:
+→ FAVOUR: mRNA platform (MRNA, BNTX), clinical stage (REGN, VRTX)
+→ SIZE SMALLER: binary event risk
 
 ═══════════════════════════════════════════
-TECHNICAL ENTRY FRAMEWORK
+PROBABILITY-WEIGHTED ENTRY SCORING
 ═══════════════════════════════════════════
-Only enter when 3+ signals align:
+Score trades on PROBABILITY not just pattern:
 
-RSI:
-- Daily RSI 30-45 = oversold bounce (score +2)
-- Weekly RSI also oversold = high conviction (score +2 extra)
-- RSI divergence = momentum shift (score +2)
-- Never buy RSI > 70 unless momentum breakout with 3x volume
+Macro alignment (+3 max):
++3 = macro regime PERFECTLY aligned (falling rates + oversold + catalyst)
++2 = macro neutral, technical strong
++1 = macro slight headwind but technical compelling
+-2 = macro clearly against the trade
+-3 = macro strongly against (rate hike fear, risk-off)
 
-MOVING AVERAGES:
-- Price > 200MA sloping up = uptrend intact (score +1)
-- Golden Cross = trend change confirmed (score +2)
-- Bounce off 200MA + RSI oversold = highest probability setup (score +3)
+Catalyst quality (+3 max):
++3 = confirmed catalyst (signed contract, FDA approval, FOMC dovish)
++2 = high-probability catalyst (earnings beat track record, outbreak escalation)
++1 = speculative catalyst (rumour, analyst upgrade)
+0 = no catalyst, pure technical
 
-FIBONACCI:
-- 61.8% retracement = golden ratio entry (score +2)
-- 50% retracement = fair value support (score +1)
-- 38.2% = shallow pullback, momentum intact (score +1)
+Technical confirmation (+2 max):
++2 = RSI oversold + moving average alignment + volume surge
++1 = one or two technical signals
+0 = no technical confirmation
 
-VOLUME:
-- Volume > 2x average on up day = institutional accumulation (score +2)
-- A/D rising while consolidating = smart money loading (score +1)
+News flow (+2 max):
++2 = multiple bullish news sources, no negative noise
++1 = some bullish news
+-1 = negative news in the sector
+-2 = direct negative news about the company
 
-═══════════════════════════════════════════
-HOLD DISCIPLINE — NON-NEGOTIABLE
-═══════════════════════════════════════════
-MINIMUM HOLD TIMES:
-- AI bottleneck stocks: 2 weeks minimum
-- Biotech catalyst plays: hold through the catalyst event
-- Oil/energy macro plays: 1-3 weeks
-- Swing trades: 5-10 trading days
-
-ONLY SELL IF:
-1. Hard stop -7% hit — no exceptions
-2. Company-specific NEGATIVE news (earnings miss, FDA rejection, contract loss)
-3. 200MA lost AND Death Cross forming — structural breakdown
-4. Target reached (+15-25%) — book partial profits
-5. Better opportunity exists AND position at breakeven or better
-
-NEVER SELL BECAUSE:
-- Market is down today (sector noise)
-- Position is down 1-4% (normal volatility)
-- You feel uncertain (emotion, not analysis)
-- The whole sector pulled back (buy more instead)
+MINIMUM SCORE TO BUY: 5+ (out of 10)
+STRONG BUY: 7+ (out of 10)
+DO NOT BUY: Below 5, or if macro score is -3
 
 ═══════════════════════════════════════════
-PROFIT TARGETS BY SECTOR
+MEMORY — YOU MUST READ THIS EVERY SCAN
 ═══════════════════════════════════════════
-AI Bottlenecks: +15-30% (secular trend, hold longer)
-Biotech catalyst: +20-50% (binary event, size smaller)
-Oil macro play: +10-20% (commodity cycle)
-Defence contract: +15-25% (government visibility)
-Materials: +15-30% (commodity supercycle)
-Swing trades: +8-15% (technical only)
-
-PARTIAL PROFIT RULES:
-- Sell 30% at first target
-- Sell 30% at second target
-- Let 40% run with trailing stop
+Memory of past mistakes is provided in the prompt.
+You MUST reference it before every decision.
+If memory says "do not hold semis into jobs reports" — DO NOT DO IT.
+If memory says "oversold RSI bounce works in low VIX" — USE THAT.
+Memory is your most powerful edge. Ignoring it is your biggest mistake.
 
 ═══════════════════════════════════════════
-BEAR MARKET TOOLKIT
+HOLD AND EXIT DISCIPLINE
 ═══════════════════════════════════════════
-When SPY below 200MA + VIX > 25:
-- Buy VXX (volatility) as hedge
-- Rotate to gold (GLD, NEM), healthcare (UNH), staples
-- Reduce position sizes to 5% max
-- Keep 35% cash for capitulation bottom
+HOLD when:
+- Position down 1-5% with thesis intact
+- Market selloff caused by macro not company-specific news
+- Within minimum hold period
 
-Bottom signals: VIX > 40, SPY RSI < 20 weekly, AAII bears > 60%
+SELL when:
+- -7% hard stop (non-negotiable)
+- Macro regime CHANGES against position (e.g. jobs report triggers rate hike fear)
+- Company-specific negative news (earnings miss, FDA rejection, contract loss)
+- Probability score drops below 3 after entry
+
+NEVER sell because:
+- Market had a bad day generally
+- Position is uncomfortable
+- Sector rotated briefly
 
 ═══════════════════════════════════════════
-TRADE LOGGING — MANDATORY
+POSITION SIZING BY PROBABILITY
 ═══════════════════════════════════════════
-Every BUY must include:
-- Full macro context (why now, what regime)
-- Technical setup (RSI, MA, pattern, Fibonacci level)
-- Sector thesis (why this sector, what catalyst)
-- Entry price, target, stop loss
-- Expected hold duration
-- Risk: what would invalidate this trade
+Score 9-10: Full 10% position
+Score 7-8: 7-8% position
+Score 5-6: 5% position
+Score below 5: DO NOT BUY
+High binary risk (FDA, earnings): Max 5% regardless of score
 
-Every SELL must include:
-- Original thesis — was it correct or wrong?
-- What triggered the sell (stop, target, thesis break)
-- What was learned from this trade
-- Capital redeployment plan
-
-You must respond ONLY with valid JSON array. No markdown, no preamble."""
-
-def get_derived_demand_plays(scan_results):
-    derived = []
-    strong  = [r["ticker"] for r in scan_results if r.get("score",0) >= 5]
-    for primary in strong:
-        if primary in DERIVED_DEMAND:
-            for bn in DERIVED_DEMAND[primary]:
-                bn_result = next((r for r in scan_results if r["ticker"] == bn), None)
-                if bn_result:
-                    derived.append({
-                        "ticker":         bn,
-                        "primary_driver": primary,
-                        "score":          bn_result.get("score",0),
-                        "derived_reason": f"{primary} strong → {bn} supplies it directly",
-                    })
-    return derived
+Return ONLY valid JSON. No markdown. No preamble."""
 
 def make_trading_decision(scan_results, portfolio, macro, current_prices):
     if not ANTHROPIC_API_KEY:
-        print("[Trader] No ANTHROPIC_API_KEY — skipping")
+        print("[Trader] No API key — skipping")
         return []
 
-    derived_plays = get_derived_demand_plays(scan_results)
-    print(f"[Trader] Found {len(derived_plays)} derived demand plays")
+    # Get memory context
+    memory_context = get_memory_context()
+    print(f"[Trader] Memory loaded: {len(memory_context)} chars")
 
-    # Build opportunities across ALL sectors
-    opportunities = []
+    # Get quant macro risk
+    macro_risk = get_macro_risk_score()
+    upcoming   = get_upcoming_events_risk()
+    print(f"[Trader] Macro risk: {macro_risk['regime']} (score {macro_risk['risk_score']}/10)")
+    print(f"[Trader] Risk factors: {macro_risk['risk_factors'][:2]}")
 
-    # Bottleneck stocks first
+    # Build opportunities
+    opps = []
     for r in scan_results:
-        if r["ticker"] in BOTTLENECK_TICKERS and r.get("score",0) >= 3:
-            ticker = r["ticker"]
-            opportunities.append(_build_opp(r, ticker, current_prices, "AI_BOTTLENECK", derived_plays))
+        if r.get("score", 0) >= 3:
+            ticker  = r["ticker"]
+            sector  = _get_sector(ticker)
+            ma      = r.get("ma", {})
+            rsi     = r.get("rsi", {})
+            rsiVal  = rsi.get("daily", {}).get("rsi") if isinstance(rsi.get("daily"), dict) else None
+            opps.append({
+                "ticker":       ticker,
+                "name":         r.get("name", ticker),
+                "sector":       sector,
+                "scan_score":   r.get("score", 0),
+                "buy_rating":   r.get("buy_rating", ""),
+                "price":        current_prices.get(ticker, 0),
+                "rsi_daily":    rsiVal,
+                "ma_signal":    ma.get("ma_signal", ""),
+                "cross":        ma.get("cross", ""),
+                "patterns":     r.get("patterns", [])[:3],
+                "signals":      r.get("signals", [])[:3],
+                "news":         [n["title"][:80] if isinstance(n, dict) else str(n)[:80]
+                                 for n in r.get("news_signals", [])[:3]],
+            })
 
-    # All other sectors
-    for r in scan_results:
-        if r["ticker"] not in BOTTLENECK_TICKERS and r.get("score",0) >= 5:
-            ticker   = r["ticker"]
-            sector   = _get_sector(ticker)
-            if not any(o["ticker"] == ticker for o in opportunities):
-                opportunities.append(_build_opp(r, ticker, current_prices, sector, derived_plays))
-
-    # Portfolio for sell analysis
     portfolio_summary = {
-        "cash":        portfolio["cash"],
-        "total_value": portfolio["total_value"],
-        "pnl":         portfolio["pnl"],
-        "pnl_pct":     portfolio["pnl_pct"],
-        "wins":        portfolio.get("wins",0),
-        "losses":      portfolio.get("losses",0),
+        "cash":      portfolio["cash"],
+        "total":     portfolio["total_value"],
+        "pnl_pct":   portfolio["pnl_pct"],
         "positions": {t: {
-            "shares":        p["shares"],
-            "entry_price":   p["entry_price"],
+            "entry_price": p["entry_price"],
             "current_price": p.get("current_price", p["entry_price"]),
-            "pnl_pct":       p.get("pnl_pct",0),
-            "days_held":     p.get("days_held",0),
-            "trade_type":    p["trade_type"],
-            "reasoning":     p["reasoning"][:120],
-            "stop_loss":     p.get("stop_loss", p["entry_price"] * 0.93),
+            "pnl_pct":     p.get("pnl_pct", 0),
+            "days_held":   p.get("days_held", 0),
+            "sector":      p.get("trade_type", ""),
+            "reasoning":   p.get("reasoning", "")[:100],
+            "stop_loss":   p.get("stop_loss", p["entry_price"] * 0.93),
         } for t, p in portfolio["positions"].items()},
     }
 
-    macro_summary = {
-        "environment": macro.get("environment","NEUTRAL"),
-        "vix":         macro.get("vix",{}).get("value","N/A"),
-        "dxy":         macro.get("dxy",{}).get("value","N/A"),
-        "yield_10yr":  macro.get("bonds",{}).get("yield_10yr","N/A"),
-        "alerts":      macro.get("alerts",[])[:3],
-    }
+    max_pos = portfolio["total_value"] * 0.10
 
-    max_position = portfolio["total_value"] * 0.10
+    prompt = f"""=== CURRENT DATE/TIME ===
+{datetime.utcnow().strftime('%A %d %B %Y %H:%M UTC')}
 
-    prompt = f"""Time: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}
+=== YOUR MEMORY (read carefully — do not repeat past mistakes) ===
+{memory_context}
 
-PORTFOLIO:
+=== QUANTITATIVE MACRO RISK ASSESSMENT ===
+Regime: {macro_risk['regime']} (Risk Score: {macro_risk['risk_score']}/10)
+Recommendation: {macro_risk['recommendation']}
+
+Risk Factors:
+{chr(10).join('- ' + r for r in macro_risk['risk_factors'])}
+
+Bullish Factors:
+{chr(10).join('- ' + b for b in macro_risk['bullish_factors'])}
+
+Raw Data: {json.dumps(macro_risk['context'])}
+
+Upcoming High-Impact Events:
+{json.dumps(upcoming) if upcoming else 'None detected'}
+
+=== PORTFOLIO ===
 {json.dumps(portfolio_summary, indent=2)}
 
-MACRO ENVIRONMENT:
-{json.dumps(macro_summary, indent=2)}
+=== SCAN OPPORTUNITIES (score >= 3) ===
+{json.dumps(opps[:25], indent=2)}
 
-OPPORTUNITIES (all sectors, bottlenecks first):
-{json.dumps(opportunities[:30], indent=2)}
+Max position: ${max_pos:,.0f} (10% of portfolio)
 
-Max position size: ${max_position:,.0f} (10% of portfolio)
+=== YOUR TASK ===
+1. Read your memory — what mistakes have you made? What has worked?
+2. Assess macro regime — is it safe to buy? What sectors fit?
+3. Review open positions — apply exit discipline
+4. Score new opportunities using the probability framework (0-10)
+5. Only act on scores 5+
 
-INSTRUCTIONS:
-1. First assess macro regime (BULL/NEUTRAL/BEAR/CAPITULATION)
-2. Review all open positions — apply strict hold discipline:
-   - Only sell if: -7% stop hit, company-specific bad news, or 200MA/Death Cross broken
-   - NEVER sell just because sector is weak or position is slightly down
-   - If a position is down with the whole market — HOLD
-3. Look for new opportunities across ALL sectors — not just AI
-4. Consider: biotech catalysts, oil macro, defence contracts, energy plays
-5. Max 2 new buys per scan to preserve capital
-6. Every action needs FULL reasoning for the trade log
+For each action, return:
+[{{
+  "action": "BUY" or "SELL" or "HOLD",
+  "ticker": "AMAT",
+  "sector": "AI_BOTTLENECK",
+  "probability_score": 7,
+  "macro_alignment": "Falling rates, VIX calm — semis favoured",
+  "catalyst": "AI capex cycle, oversold after sector rotation",
+  "reasoning": "Full reasoning — macro + catalyst + technical + memory reference",
+  "sell_reason": "For SELL: why thesis broke, what macro changed",
+  "lesson": "For SELL: what we learn from this trade",
+  "position_size_pct": 7.0,
+  "target_pct": 15.0,
+  "stop_pct": 7.0,
+  "hold_duration": "2-3 weeks",
+  "confidence": "HIGH/MEDIUM/LOW"
+}}]
 
-Return JSON array:
-[
-  {{
-    "action": "BUY" or "SELL" or "HOLD",
-    "ticker": "MRNA",
-    "trade_type": "swing",
-    "reasoning": "FULL reasoning — macro context, technical setup, sector thesis, catalyst",
-    "sell_reason": "For SELL only — was thesis correct? what broke? what learned?",
-    "confidence": "HIGH/MEDIUM/LOW",
-    "hold_duration": "2-3 weeks",
-    "target_pct": 20.0,
-    "stop_pct": 7.0,
-    "sector": "BIOTECH",
-    "catalyst": "specific catalyst or technical setup",
-    "risk_note": "what would invalidate this trade"
-  }}
-]
-
-Return [] if no strong setups or no clear sell signals. Quality over quantity."""
+Return [] if no high-probability setups or nothing to sell."""
 
     try:
         resp = requests.post(
             "https://api.anthropic.com/v1/messages",
-            headers={
-                "x-api-key":         ANTHROPIC_API_KEY,
-                "anthropic-version": "2023-06-01",
-                "content-type":      "application/json",
-            },
-            json={
-                "model":      "claude-opus-4-8",
-                "max_tokens": 2000,
-                "system":     TRADER_SYSTEM_PROMPT,
-                "messages":   [{"role":"user","content":prompt}],
-            },
-            timeout=45,
+            headers={"x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json"},
+            json={"model": "claude-opus-4-8", "max_tokens": 2500, "system": QUANT_SYSTEM_PROMPT, "messages": [{"role": "user", "content": prompt}]},
+            timeout=50,
         )
         if resp.status_code != 200:
-            print(f"[Trader] API error: {resp.status_code} — {resp.text[:100]}")
+            print(f"[Trader] API error: {resp.status_code}")
             return []
 
-        content = resp.json().get("content",[{}])[0].get("text","[]")
-        content = content.replace("```json","").replace("```","").strip()
+        content = resp.json().get("content", [{}])[0].get("text", "[]")
+        content = content.replace("```json", "").replace("```", "").strip()
         match   = re.search(r'\[[\s\S]*\]', content)
         if match:
             actions = json.loads(match.group(0))
             print(f"[Trader] AI decided {len(actions)} action(s)")
             for a in actions:
-                print(f"  {a.get('action')} {a.get('ticker')} [{a.get('confidence')}] [{a.get('sector','')}]")
+                prob = a.get("probability_score", "?")
+                print(f"  {a.get('action')} {a.get('ticker')} [prob:{prob}/10] [{a.get('sector','')}]")
+                print(f"    Macro: {a.get('macro_alignment','')[:80]}")
                 print(f"    {a.get('reasoning','')[:100]}")
+
+                # Record lessons from sells
+                if a.get("action") == "SELL":
+                    pos = portfolio["positions"].get(a.get("ticker", ""), {})
+                    record_lesson(
+                        ticker      = a.get("ticker", ""),
+                        action      = "SELL",
+                        pnl_pct     = pos.get("pnl_pct"),
+                        reasoning   = a.get("reasoning", ""),
+                        sell_reason = a.get("sell_reason", "") + " | " + a.get("lesson", ""),
+                        macro_env   = macro_risk["regime"],
+                        sector      = a.get("sector", ""),
+                    )
             return actions
     except Exception as e:
-        print(f"[Trader] Decision error: {e}")
+        print(f"[Trader] Error: {e}")
     return []
 
 def _get_sector(ticker):
@@ -334,25 +295,3 @@ def _get_sector(ticker):
         if ticker in tickers:
             return sector
     return "OTHER"
-
-def _build_opp(r, ticker, current_prices, sector, derived_plays):
-    ma       = r.get("ma",{})
-    rsi      = r.get("rsi",{})
-    derived  = next((d for d in derived_plays if d["ticker"] == ticker), None)
-    return {
-        "ticker":         ticker,
-        "name":           r.get("name",ticker),
-        "sector":         sector,
-        "score":          r.get("score",0),
-        "rating":         r.get("buy_rating",""),
-        "price":          current_prices.get(ticker,0),
-        "ma_signal":      ma.get("ma_signal",""),
-        "cross":          ma.get("cross",""),
-        "rsi_daily":      rsi.get("daily",{}).get("rsi") if isinstance(rsi.get("daily"),dict) else None,
-        "rsi_weekly":     rsi.get("weekly",{}).get("rsi") if isinstance(rsi.get("weekly"),dict) else None,
-        "patterns":       r.get("patterns",[])[:3],
-        "signals":        r.get("signals",[])[:3],
-        "news":           [n["title"][:80] for n in r.get("news_signals",[])[:2]],
-        "derived_demand": derived["derived_reason"] if derived else None,
-        "primary_driver": derived["primary_driver"] if derived else None,
-    }
