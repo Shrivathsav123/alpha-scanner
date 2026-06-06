@@ -14,11 +14,6 @@ except Exception as e:
     print(f"Reddit import error: {e}")
     run_reddit_scan = None
 
-try:
-    from nse_scanner import run_nse_scan
-except Exception as e:
-    print(f"NSE import error: {e}")
-    run_nse_scan = None
 
 DATA_DIR   = "data"
 STORE_FILE = f"{DATA_DIR}/scan_results.json"
@@ -271,12 +266,7 @@ def main():
 
     # Run NSE scan every other run
     try:
-        if count % 2 == 0 and run_nse_scan:
-            print("[NSE Scanner] Starting Indian market scan...")
-            nse_results = run_nse_scan(send_telegram=send)
-            print(f"[NSE Scanner] Done. {len(nse_results)} stocks scanned.")
     except Exception as e:
-        print(f"[NSE Scanner] Non-fatal error: {e} — continuing")
 
     print(f"[Scanner] Done. {alerts_sent} alerts sent.")
 
