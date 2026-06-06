@@ -264,9 +264,6 @@ def main():
     except Exception as e:
         print(f"[Reddit Scanner] Non-fatal error: {e} — continuing")
 
-    # Run NSE scan every other run
-    try:
-    except Exception as e:
 
     print(f"[Scanner] Done. {alerts_sent} alerts sent.")
 
