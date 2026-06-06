@@ -1,100 +1,5 @@
 [
   {
-    "ticker": "MU",
-    "name": "Micron Technology",
-    "score": 3,
-    "max": 12,
-    "signals": [
-      "\u2705 Golden Cross active",
-      "\u2705 Above 200MA",
-      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
-      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
-    ],
-    "ma": {
-      "price": 864.01,
-      "ma50": 617.36,
-      "ma200": 360.85,
-      "ma_signal": "\u2705 Above 200MA",
-      "cross": "\u2705 Golden Cross active"
-    },
-    "ad": {
-      "signal": "\u26a0\ufe0f A/D declining"
-    },
-    "patterns": [
-      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
-      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
-    ],
-    "fundamentals": {},
-    "buy_rating": "WATCH",
-    "conviction": "LOW",
-    "news_signals": [],
-    "market": "US"
-  },
-  {
-    "ticker": "META",
-    "name": "Meta Platforms",
-    "score": 3,
-    "max": 12,
-    "signals": [
-      "RSI oversold on DAILY, WEEKLY",
-      "\u26a0\ufe0f Below 200MA",
-      "\ud83d\udccd Near Support: $582.91",
-      "\ud83c\udf1f Fib 61.8%: $585.68"
-    ],
-    "ma": {
-      "price": 593.0,
-      "ma50": 619.52,
-      "ma200": 662.45,
-      "ma_signal": "\u26a0\ufe0f Below 200MA"
-    },
-    "ad": {
-      "signal": "\u26a0\ufe0f A/D declining"
-    },
-    "patterns": [
-      "\ud83d\udccd Near Support: $582.91",
-      "\ud83c\udf1f Fib 61.8%: $585.68",
-      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
-      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
-    ],
-    "fundamentals": {},
-    "buy_rating": "WATCH",
-    "conviction": "LOW",
-    "news_signals": [],
-    "market": "US"
-  },
-  {
-    "ticker": "SMH",
-    "name": "VanEck Semiconductor ETF",
-    "score": 3,
-    "max": 12,
-    "signals": [
-      "\u2705 Golden Cross active",
-      "\u2705 Above 200MA",
-      "\ud83d\udd0a Volume Spike: 2.0x",
-      "\ud83d\udcc9 Downtrend: Lower Highs & Lows"
-    ],
-    "ma": {
-      "price": 569.69,
-      "ma50": 506.94,
-      "ma200": 396.7,
-      "ma_signal": "\u2705 Above 200MA",
-      "cross": "\u2705 Golden Cross active"
-    },
-    "ad": {
-      "signal": "\u26a0\ufe0f A/D declining"
-    },
-    "patterns": [
-      "\ud83d\udd0a Volume Spike: 2.0x",
-      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
-      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
-    ],
-    "fundamentals": {},
-    "buy_rating": "WATCH",
-    "conviction": "LOW",
-    "news_signals": [],
-    "market": "US"
-  },
-  {
     "ticker": "XLK",
     "name": "Technology Select Sector SPDR",
     "score": 3,
@@ -126,29 +31,29 @@
     "market": "US"
   },
   {
-    "ticker": "ARKK",
-    "name": "ARK Innovation ETF",
+    "ticker": "ARKF",
+    "name": "ARK Fintech Innovation ETF",
     "score": 3,
     "max": 12,
     "signals": [
       "RSI oversold on DAILY, WEEKLY",
       "\u26a0\ufe0f Below 200MA",
-      "\ud83d\udccd Near Support: $72.96",
-      "\ud83d\udcd0 Fib 38.2%: $75.00"
+      "\ud83d\udccd Near Support: $37.83",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows"
     ],
     "ma": {
-      "price": 74.49,
-      "ma50": 75.28,
-      "ma200": 78.07,
+      "price": 38.18,
+      "ma50": 40.9,
+      "ma200": 46.93,
       "ma_signal": "\u26a0\ufe0f Below 200MA"
     },
     "ad": {
       "signal": "\u26a0\ufe0f A/D declining"
     },
     "patterns": [
-      "\ud83d\udccd Near Support: $72.96",
-      "\ud83d\udcd0 Fib 38.2%: $75.00",
-      "\ud83d\udcc9 Downtrend: Lower Highs & Lows"
+      "\ud83d\udccd Near Support: $37.83",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
     ],
     "fundamentals": {},
     "buy_rating": "WATCH",
@@ -157,21 +62,21 @@
     "market": "US"
   },
   {
-    "ticker": "NOW",
-    "name": "ServiceNow",
-    "score": 2,
+    "ticker": "WCLD",
+    "name": "WisdomTree Cloud Computing",
+    "score": 3,
     "max": 12,
     "signals": [
-      "RSI oversold on WEEKLY",
-      "\u26a0\ufe0f Below 200MA",
+      "\u2705 Above 200MA",
       "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
       "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
     ],
     "ma": {
-      "price": 112.45,
-      "ma50": 99.06,
-      "ma200": 140.18,
-      "ma_signal": "\u26a0\ufe0f Below 200MA"
+      "price": 32.2,
+      "ma50": 28.61,
+      "ma200": 32.0,
+      "ma_signal": "\u2705 Above 200MA",
+      "near_200ma": "\ud83d\udccd At 200MA"
     },
     "ad": {
       "signal": "\u26a0\ufe0f A/D declining"
@@ -183,6 +88,124 @@
     "fundamentals": {},
     "buy_rating": "WATCH",
     "conviction": "LOW",
+    "news_signals": [],
+    "market": "US"
+  },
+  {
+    "ticker": "ROBT",
+    "name": "First Trust Nasdaq AI & Robotics",
+    "score": 3,
+    "max": 12,
+    "signals": [
+      "\u2705 Above 200MA",
+      "A/D rising \u2014 institutions loading",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "ma": {
+      "price": 55.56,
+      "ma50": 52.12,
+      "ma200": 52.21,
+      "ma_signal": "\u2705 Above 200MA"
+    },
+    "ad": {
+      "signal": "\u2705 Institutions accumulating"
+    },
+    "patterns": [
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "fundamentals": {},
+    "buy_rating": "WATCH",
+    "conviction": "LOW",
+    "news_signals": [],
+    "market": "US"
+  },
+  {
+    "ticker": "MU",
+    "name": "Micron Technology",
+    "score": 3,
+    "max": 12,
+    "signals": [
+      "\u2705 Golden Cross active",
+      "\u2705 Above 200MA",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "ma": {
+      "price": 864.01,
+      "ma50": 617.36,
+      "ma200": 360.85,
+      "ma_signal": "\u2705 Above 200MA",
+      "cross": "\u2705 Golden Cross active"
+    },
+    "ad": {
+      "signal": "\u26a0\ufe0f A/D declining"
+    },
+    "patterns": [
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "fundamentals": {},
+    "buy_rating": "WATCH",
+    "conviction": "LOW",
+    "news_signals": [],
+    "market": "US"
+  },
+  {
+    "ticker": "ARKG",
+    "name": "ARK Genomic Revolution ETF",
+    "score": 2,
+    "max": 12,
+    "signals": [
+      "\u2705 Golden Cross active",
+      "\u2705 Above 200MA",
+      "A/D rising \u2014 institutions loading"
+    ],
+    "ma": {
+      "price": 33.41,
+      "ma50": 29.83,
+      "ma200": 29.23,
+      "ma_signal": "\u2705 Above 200MA",
+      "cross": "\u2705 Golden Cross active"
+    },
+    "ad": {
+      "signal": "\u2705 Institutions accumulating"
+    },
+    "patterns": [],
+    "fundamentals": {},
+    "buy_rating": "WATCH",
+    "conviction": "LOW",
+    "news_signals": [],
+    "market": "US"
+  },
+  {
+    "ticker": "IGV",
+    "name": "iShares Software ETF",
+    "score": 1,
+    "max": 12,
+    "signals": [
+      "\u26a0\ufe0f Below 200MA",
+      "\ud83d\udcd0 Fib 38.2%: $95.02",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows"
+    ],
+    "ma": {
+      "price": 95.85,
+      "ma50": 87.77,
+      "ma200": 98.67,
+      "ma_signal": "\u26a0\ufe0f Below 200MA"
+    },
+    "ad": {
+      "signal": "\u26a0\ufe0f A/D declining"
+    },
+    "patterns": [
+      "\ud83d\udcd0 Fib 38.2%: $95.02",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "fundamentals": {},
+    "buy_rating": "SKIP",
+    "conviction": "SKIP",
     "news_signals": [],
     "market": "US"
   }

@@ -1,5 +1,163 @@
 [
   {
+    "ticker": "XLK",
+    "name": "Technology Select Sector SPDR",
+    "score": 3,
+    "max": 12,
+    "signals": [
+      "\u2705 Golden Cross active",
+      "\u2705 Above 200MA",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "ma": {
+      "price": 180.3,
+      "ma50": 163.01,
+      "ma200": 146.88,
+      "ma_signal": "\u2705 Above 200MA",
+      "cross": "\u2705 Golden Cross active"
+    },
+    "ad": {
+      "signal": "\u26a0\ufe0f A/D declining"
+    },
+    "patterns": [
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "fundamentals": {},
+    "buy_rating": "WATCH",
+    "conviction": "LOW",
+    "news_signals": [],
+    "market": "US",
+    "savedAt": "2026-06-06T13:23:54.473428"
+  },
+  {
+    "ticker": "ARKF",
+    "name": "ARK Fintech Innovation ETF",
+    "score": 3,
+    "max": 12,
+    "signals": [
+      "RSI oversold on DAILY, WEEKLY",
+      "\u26a0\ufe0f Below 200MA",
+      "\ud83d\udccd Near Support: $37.83",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows"
+    ],
+    "ma": {
+      "price": 38.18,
+      "ma50": 40.9,
+      "ma200": 46.93,
+      "ma_signal": "\u26a0\ufe0f Below 200MA"
+    },
+    "ad": {
+      "signal": "\u26a0\ufe0f A/D declining"
+    },
+    "patterns": [
+      "\ud83d\udccd Near Support: $37.83",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "fundamentals": {},
+    "buy_rating": "WATCH",
+    "conviction": "LOW",
+    "news_signals": [],
+    "market": "US",
+    "savedAt": "2026-06-06T13:23:54.473443"
+  },
+  {
+    "ticker": "WCLD",
+    "name": "WisdomTree Cloud Computing",
+    "score": 3,
+    "max": 12,
+    "signals": [
+      "\u2705 Above 200MA",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "ma": {
+      "price": 32.2,
+      "ma50": 28.61,
+      "ma200": 32.0,
+      "ma_signal": "\u2705 Above 200MA",
+      "near_200ma": "\ud83d\udccd At 200MA"
+    },
+    "ad": {
+      "signal": "\u26a0\ufe0f A/D declining"
+    },
+    "patterns": [
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "fundamentals": {},
+    "buy_rating": "WATCH",
+    "conviction": "LOW",
+    "news_signals": [],
+    "market": "US",
+    "savedAt": "2026-06-06T13:23:54.473446"
+  },
+  {
+    "ticker": "ROBT",
+    "name": "First Trust Nasdaq AI & Robotics",
+    "score": 3,
+    "max": 12,
+    "signals": [
+      "\u2705 Above 200MA",
+      "A/D rising \u2014 institutions loading",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "ma": {
+      "price": 55.56,
+      "ma50": 52.12,
+      "ma200": 52.21,
+      "ma_signal": "\u2705 Above 200MA"
+    },
+    "ad": {
+      "signal": "\u2705 Institutions accumulating"
+    },
+    "patterns": [
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "fundamentals": {},
+    "buy_rating": "WATCH",
+    "conviction": "LOW",
+    "news_signals": [],
+    "market": "US",
+    "savedAt": "2026-06-06T13:23:54.473449"
+  },
+  {
+    "ticker": "MU",
+    "name": "Micron Technology",
+    "score": 3,
+    "max": 12,
+    "signals": [
+      "\u2705 Golden Cross active",
+      "\u2705 Above 200MA",
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "ma": {
+      "price": 864.01,
+      "ma50": 617.36,
+      "ma200": 360.85,
+      "ma_signal": "\u2705 Above 200MA",
+      "cross": "\u2705 Golden Cross active"
+    },
+    "ad": {
+      "signal": "\u26a0\ufe0f A/D declining"
+    },
+    "patterns": [
+      "\ud83d\udcc9 Downtrend: Lower Highs & Lows",
+      "\ud83d\udcca Bullish FVG \u2014 buy on pullback"
+    ],
+    "fundamentals": {},
+    "buy_rating": "WATCH",
+    "conviction": "LOW",
+    "news_signals": [],
+    "market": "US",
+    "savedAt": "2026-06-06T13:23:54.473452"
+  },
+  {
     "ticker": "MU",
     "name": "Micron Technology",
     "score": 3,

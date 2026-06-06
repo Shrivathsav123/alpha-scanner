@@ -5,7 +5,7 @@
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:13:11.159786"
+    "timestamp": "2026-06-06T13:24:02.147463"
   },
   {
     "ticker": "AVGO",
@@ -13,7 +13,7 @@
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:13:11.159801"
+    "timestamp": "2026-06-06T13:24:02.147480"
   },
   {
     "ticker": "QQQ",
@@ -21,7 +21,7 @@
     "bull_pct": 60,
     "bear_pct": 40,
     "sentiment": "bullish",
-    "timestamp": "2026-06-06T13:13:11.159804"
+    "timestamp": "2026-06-06T13:24:02.147483"
   },
   {
     "ticker": "NVDA",
@@ -29,7 +29,7 @@
     "bull_pct": 60,
     "bear_pct": 40,
     "sentiment": "bullish",
-    "timestamp": "2026-06-06T13:13:11.159806"
+    "timestamp": "2026-06-06T13:24:02.147486"
   },
   {
     "ticker": "AMZN",
@@ -37,7 +37,7 @@
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:13:11.159808"
+    "timestamp": "2026-06-06T13:24:02.147488"
   },
   {
     "ticker": "SPY",
@@ -45,7 +45,7 @@
     "bull_pct": 100,
     "bear_pct": 0,
     "sentiment": "bullish",
-    "timestamp": "2026-06-06T13:13:11.159811"
+    "timestamp": "2026-06-06T13:24:02.147490"
   },
   {
     "ticker": "MU",
@@ -53,7 +53,7 @@
     "bull_pct": 55,
     "bear_pct": 45,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:13:11.159814"
+    "timestamp": "2026-06-06T13:24:02.147493"
   },
   {
     "ticker": "COIN",
@@ -61,7 +61,7 @@
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:13:11.159821"
+    "timestamp": "2026-06-06T13:24:02.147499"
   },
   {
     "ticker": "AMD",
@@ -69,7 +69,7 @@
     "bull_pct": 55,
     "bear_pct": 45,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:13:11.159824"
+    "timestamp": "2026-06-06T13:24:02.147502"
   },
   {
     "ticker": "ARM",
@@ -77,7 +77,7 @@
     "bull_pct": 0,
     "bear_pct": 100,
     "sentiment": "bearish",
-    "timestamp": "2026-06-06T13:13:11.159826"
+    "timestamp": "2026-06-06T13:24:02.147505"
   },
   {
     "ticker": "SMCI",
@@ -85,7 +85,7 @@
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:13:11.159828"
+    "timestamp": "2026-06-06T13:24:02.147507"
   },
   {
     "ticker": "SMH",
@@ -93,7 +93,7 @@
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:13:11.159830"
+    "timestamp": "2026-06-06T13:24:02.147509"
   },
   {
     "ticker": "GME",
@@ -101,6 +101,6 @@
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:13:11.159832"
+    "timestamp": "2026-06-06T13:24:02.147511"
   }
 ]
