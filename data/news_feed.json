@@ -1,17 +1,17 @@
 [
   {
-    "title": "Meta's stock sinks on report company could raise tens of billions of dollars to fund AI push",
-    "summary": "Meta shares dropped after the Financial Times reported the company could potentially raise tens of billions of dollars in a stock offering to help its AI push.",
-    "link": "https://www.cnbc.com/2026/06/05/meta-stock-sinks-on-report-company-could-raise-tens-of-billions-for-ai.html",
-    "source": "CNBC",
+    "title": "Why Elon Musk says ASML is the greatest company in Europe",
+    "summary": "For Elon Musk\u2019s ambitious Terafab project in Texas to be successful, Musk is going to need  lots of ASML\u2019s industry-leading lithography machines.",
+    "link": "https://www.marketwatch.com/story/why-elon-musk-says-asml-is-the-greatest-company-in-europe-a353f33a?mod=mw_rss_topstories",
+    "source": "MarketWatch",
     "tickers": [
-      "META"
+      "ASML"
     ],
     "impact": 0,
     "bull": false,
     "bear": false,
-    "time": "2026-06-06T13:23:58.129033",
-    "recent": false
+    "time": "2026-06-08T14:31:47.565332",
+    "recent": true
   },
   {
     "title": "Nvidia, Meta and SLB rank among top companies in adopting AI, new study says",
@@ -25,7 +25,7 @@
     "impact": 0,
     "bull": false,
     "bear": false,
-    "time": "2026-06-06T13:23:58.227095",
+    "time": "2026-06-08T14:31:46.582122",
     "recent": false
   }
 ]

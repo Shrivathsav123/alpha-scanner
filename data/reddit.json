@@ -1,106 +1,106 @@
 [
   {
-    "ticker": "META",
-    "mentions": 5,
-    "bull_pct": 50,
-    "bear_pct": 50,
+    "ticker": "MU",
+    "mentions": 6,
+    "bull_pct": 56,
+    "bear_pct": 44,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:24:02.147463"
+    "timestamp": "2026-06-08T14:31:50.588513"
   },
   {
-    "ticker": "AVGO",
-    "mentions": 3,
-    "bull_pct": 50,
-    "bear_pct": 50,
-    "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:24:02.147480"
-  },
-  {
-    "ticker": "QQQ",
-    "mentions": 3,
-    "bull_pct": 60,
-    "bear_pct": 40,
-    "sentiment": "bullish",
-    "timestamp": "2026-06-06T13:24:02.147483"
-  },
-  {
-    "ticker": "NVDA",
-    "mentions": 3,
-    "bull_pct": 60,
-    "bear_pct": 40,
-    "sentiment": "bullish",
-    "timestamp": "2026-06-06T13:24:02.147486"
-  },
-  {
-    "ticker": "AMZN",
+    "ticker": "SNDK",
     "mentions": 2,
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:24:02.147488"
+    "timestamp": "2026-06-08T14:31:50.588529"
   },
   {
     "ticker": "SPY",
     "mentions": 2,
-    "bull_pct": 100,
-    "bear_pct": 0,
+    "bull_pct": 33,
+    "bear_pct": 67,
+    "sentiment": "bearish",
+    "timestamp": "2026-06-08T14:31:50.588532"
+  },
+  {
+    "ticker": "AVGO",
+    "mentions": 2,
+    "bull_pct": 67,
+    "bear_pct": 33,
     "sentiment": "bullish",
-    "timestamp": "2026-06-06T13:24:02.147490"
+    "timestamp": "2026-06-08T14:31:50.588535"
   },
   {
-    "ticker": "MU",
-    "mentions": 1,
-    "bull_pct": 55,
-    "bear_pct": 45,
-    "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:24:02.147493"
+    "ticker": "ANET",
+    "mentions": 2,
+    "bull_pct": 67,
+    "bear_pct": 33,
+    "sentiment": "bullish",
+    "timestamp": "2026-06-08T14:31:50.588537"
   },
   {
-    "ticker": "COIN",
-    "mentions": 1,
+    "ticker": "MSFT",
+    "mentions": 2,
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:24:02.147499"
+    "timestamp": "2026-06-08T14:31:50.588539"
   },
   {
-    "ticker": "AMD",
-    "mentions": 1,
-    "bull_pct": 55,
-    "bear_pct": 45,
+    "ticker": "GOOGL",
+    "mentions": 2,
+    "bull_pct": 50,
+    "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:24:02.147502"
+    "timestamp": "2026-06-08T14:31:50.588542"
   },
   {
-    "ticker": "ARM",
-    "mentions": 1,
+    "ticker": "AMZN",
+    "mentions": 2,
     "bull_pct": 0,
     "bear_pct": 100,
     "sentiment": "bearish",
-    "timestamp": "2026-06-06T13:24:02.147505"
+    "timestamp": "2026-06-08T14:31:50.588549"
   },
   {
-    "ticker": "SMCI",
+    "ticker": "AAPL",
     "mentions": 1,
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:24:02.147507"
+    "timestamp": "2026-06-08T14:31:50.588551"
   },
   {
     "ticker": "SMH",
     "mentions": 1,
-    "bull_pct": 50,
-    "bear_pct": 50,
-    "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:24:02.147509"
+    "bull_pct": 0,
+    "bear_pct": 100,
+    "sentiment": "bearish",
+    "timestamp": "2026-06-08T14:31:50.588554"
   },
   {
-    "ticker": "GME",
+    "ticker": "QQQ",
     "mentions": 1,
     "bull_pct": 50,
     "bear_pct": 50,
     "sentiment": "mixed",
-    "timestamp": "2026-06-06T13:24:02.147511"
+    "timestamp": "2026-06-08T14:31:50.588556"
+  },
+  {
+    "ticker": "NVDA",
+    "mentions": 1,
+    "bull_pct": 100,
+    "bear_pct": 0,
+    "sentiment": "bullish",
+    "timestamp": "2026-06-08T14:31:50.588558"
+  },
+  {
+    "ticker": "META",
+    "mentions": 1,
+    "bull_pct": 100,
+    "bear_pct": 0,
+    "sentiment": "bullish",
+    "timestamp": "2026-06-08T14:31:50.588560"
   }
 ]
