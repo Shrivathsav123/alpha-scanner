@@ -1,19 +1,5 @@
 [
   {
-    "title": "Why Elon Musk says ASML is the greatest company in Europe",
-    "summary": "For Elon Musk\u2019s ambitious Terafab project in Texas to be successful, Musk is going to need  lots of ASML\u2019s industry-leading lithography machines.",
-    "link": "https://www.marketwatch.com/story/why-elon-musk-says-asml-is-the-greatest-company-in-europe-a353f33a?mod=mw_rss_topstories",
-    "source": "MarketWatch",
-    "tickers": [
-      "ASML"
-    ],
-    "impact": 0,
-    "bull": false,
-    "bear": false,
-    "time": "2026-06-08T14:31:47.565332",
-    "recent": true
-  },
-  {
     "title": "Nvidia, Meta and SLB rank among top companies in adopting AI, new study says",
     "summary": "The AI-Driven Enterprise Institute released new research that breaks down the degree to which S&amp;P 500 companies are adopting AI compared with their peers.",
     "link": "https://www.cnbc.com/2026/06/01/nvidia-meta-walmart-among-top-companies-adopting-ai.html",
@@ -25,7 +11,21 @@
     "impact": 0,
     "bull": false,
     "bear": false,
-    "time": "2026-06-08T14:31:46.582122",
+    "time": "2026-06-08T19:41:23.648834",
+    "recent": false
+  },
+  {
+    "title": "Why Meta Platforms Stock Is Worth Buying Despite It Being \"Speculative\"",
+    "summary": "",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/why-meta-platforms-stock-worth-103500329.html",
+    "source": "Yahoo Finance",
+    "tickers": [
+      "META"
+    ],
+    "impact": 0,
+    "bull": false,
+    "bear": false,
+    "time": "2026-06-08T19:41:24.669473",
     "recent": false
   }
 ]
