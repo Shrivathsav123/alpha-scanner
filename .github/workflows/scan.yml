@@ -1,89 +1,95 @@
-name: Alpha Scanner
+name: MeritQuant Scanner & AI Trader
 
 on:
   schedule:
-    - cron: "0 11 * * 1-5"    # 6:00 AM ET  — Pre-market scan (no AI trades)
-    - cron: "35 13 * * 1-5"   # 9:35 AM ET  — Market open scan (AI TRADES)
-    - cron: "0 16 * * 1-5"    # 12:00 PM ET — Midday scan (no AI trades)
-    - cron: "30 19 * * 1-5"   # 3:30 PM ET  — Pre-close scan (AI TRADES)
-    - cron: "30 21 * * 1-5"   # 5:30 PM ET  — After-hours wrap (no AI trades)
+    - cron: '0 14 * * 1-5'
+    - cron: '0 16 * * 1-5'
+    - cron: '0 18 * * 1-5'
+    - cron: '30 13 * * 1-5'
+    - cron: '25 19 * * 1-5'
+
   workflow_dispatch:
     inputs:
-      mode:
-        description: "Scan mode"
+      force_trade:
+        description: 'Force AI trader to run'
         required: false
-        default: "default"
+        default: 'false'
         type: choice
-        options:
-          - default
-          - dry-run
-
-permissions:
-  contents: write
+        options: ['true', 'false']
+      force_scan_only:
+        description: 'Run scanner only'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['true', 'false']
 
 jobs:
   scan:
+    name: Scan & Trade
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Restore cache
-        uses: actions/cache@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          path: data/
-          key: alpha-data-${{ github.run_id }}
-          restore-keys: alpha-data-
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
-      - name: Cache pip
+      - name: Restore pip cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: pip-alpha-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run Alpha Scanner
         env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python main.py
+          FRED_API_KEY:     ${{ secrets.FRED_API_KEY }}
+        run: python scanner.py
 
       - name: Run AI Trader (open + pre-close only)
+        if: ${{ github.event.inputs.force_scan_only != 'true' }}
         env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: |
-          HOUR=$(date -u +%H)
-          MINUTE=$(date -u +%M)
-          if [ "$HOUR" = "13" ] || [ "$HOUR" = "19" ]; then
-            echo "AI trading window — running trader"
-            python trading/trader.py
-          else
-            echo "Scan-only window at $HOUR:$MINUTE UTC — skipping AI trades"
-          fi
+          TELEGRAM_TOKEN:    ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID:  ${{ secrets.TELEGRAM_CHAT_ID }}
+          FRED_API_KEY:      ${{ secrets.FRED_API_KEY }}
+          TRADE_MODE: >-
+            ${{
+              (
+                github.event.schedule == '30 13 * * 1-5' ||
+                github.event.schedule == '25 19 * * 1-5' ||
+                github.event.inputs.force_trade == 'true'
+              ) && 'true' || 'false'
+            }}
+        run: python ai_trader.py
 
-      - name: Commit scan results
-        if: always()
+      - name: Commit results
         run: |
-          git config user.name "Alpha Scanner Bot"
-          git config user.email "scanner@alpha.bot"
-          mkdir -p data
-          git add data/ || true
-          git diff --staged --quiet || git commit -m "Scan $(date -u '+%H:%M UTC %d %b')"
-          git push || true
+          git config --global user.email "bot@meritquant.ai"
+          git config --global user.name "MeritQuant Bot"
+          git add data/ reports/ -A
+          git diff --staged --quiet || \
+            git commit -m "scan: $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Save cache
-        if: always()
+      - name: Save pip cache
         uses: actions/cache@v4
         with:
-          path: data/
-          key: alpha-data-${{ github.run_id }}
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
